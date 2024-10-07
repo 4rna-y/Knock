@@ -1,0 +1,12 @@
+﻿{
+  "locale": "en",
+  "token": "MTI3MDMwNDc3Mjk4MDk5ODIwNg.GPc0tu.TaxqdwgkifWJyEqPle971fY0k10CkpI90GyMBU",
+  "guild": "1148090697702965308",
+  "channel": "1148090698181132300",
+  "conversation-group": "1148090698181132298",
+  "log": "1282749890404810782",
+  "address": "ws://127.0.0.1:54321",
+  "containers": [
+    "127.0.0.1:12345"
+  ]
+}

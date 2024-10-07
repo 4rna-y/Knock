@@ -1,0 +1,1247 @@
+[
+  {
+    "hidden": true,
+    "key": "accepts-transfers",
+    "defaultvalue": "false",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enable",
+          "ja": "有効にします"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Disable",
+          "ja": "無効にします"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Allows transfers from the server",
+      "ja": "サーバーからの転送を許可します"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "allow-flight",
+    "defaultvalue": "false",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enable",
+          "ja": "有効にします"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Disable",
+          "ja": "無効にします"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Permission to fly is granted",
+      "ja": "飛行を許可します"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "allow-nether",
+    "defaultvalue": "true",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enable",
+          "ja": "有効にします"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Disable",
+          "ja": "無効にします"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Allows players to enter the Nether",
+      "ja": "プレイヤーがネザーに入ることを許可します"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "broadcast-console-to-ops",
+    "defaultvalue": "true",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enable",
+          "ja": "有効にします"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Disable",
+          "ja": "無効にします"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Broadcast console messages to operators",
+      "ja": "オペレーターにコンソールメッセージをブロードキャストします"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "broadcast-rcon-to-ops",
+    "defaultvalue": "true",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enable",
+          "ja": "有効にします"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Disable",
+          "ja": "無効にします"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Broadcast RCON messages to operators",
+      "ja": "オペレーターにRCONメッセージをブロードキャストします"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "bug-report-link",
+    "defaultvalue": "",
+    "type": "string",
+    "locale": {
+      "en": "URL for reporting bugs",
+      "ja": "バグ報告用URL"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "debug",
+    "defaultvalue": "false",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enable",
+          "ja": "有効にします"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Disable",
+          "ja": "無効にします"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Enables debugging mode",
+      "ja": "デバッグモードを有効にします"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "difficulty",
+    "defaultvalue": "easy",
+    "type": "enum",
+    "options": [
+      {
+        "value": "peaceful",
+        "locale": {
+          "en": "Peaceful",
+          "ja": "ピースフル"
+        }
+      },
+      {
+        "value": "easy",
+        "locale": {
+          "en": "Easy",
+          "ja": "イージー"
+        }
+      },
+      {
+        "value": "normal",
+        "locale": {
+          "en": "Normal",
+          "ja": "ノーマル"
+        }
+      },
+      {
+        "value": "hard",
+        "locale": {
+          "en": "Hard",
+          "ja": "ハード"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Sets the game difficulty",
+      "ja": "ゲームの難易度を設定します"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "enable-command-block",
+    "defaultvalue": "false",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enable",
+          "ja": "有効にします"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Disable",
+          "ja": "無効にします"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Enables command blocks",
+      "ja": "コマンドブロックを有効にします"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "enable-jmx-monitoring",
+    "defaultvalue": "false",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enable",
+          "ja": "有効にします"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Disable",
+          "ja": "無効にします"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Enables JMX monitoring",
+      "ja": "JMX監視を有効にします"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "enable-query",
+    "defaultvalue": "false",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enable",
+          "ja": "有効にします"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Disable",
+          "ja": "無効にします"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Enables GameSpy4 query protocol",
+      "ja": "GameSpy4クエリプロトコルを有効にします"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "enable-rcon",
+    "defaultvalue": "false",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enable",
+          "ja": "有効にします"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Disable",
+          "ja": "無効にします"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Enables remote console access",
+      "ja": "リモートコンソールアクセスを有効にします"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "enable-status",
+    "defaultvalue": "true",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enable",
+          "ja": "有効にします"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Disable",
+          "ja": "無効にします"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Enables server status",
+      "ja": "サーバーステータスを有効にします"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "enforce-secure-profile",
+    "defaultvalue": "true",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enable",
+          "ja": "有効にします"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Disable",
+          "ja": "無効にします"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Enforces the use of secure profiles",
+      "ja": "セキュアプロファイルの使用を強制します"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "enforce-whitelist",
+    "defaultvalue": "false",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enable",
+          "ja": "有効にします"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Disable",
+          "ja": "無効にします"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Enforces the server whitelist",
+      "ja": "サーバーのホワイトリストを強制します"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "entity-broadcast-range-percentage",
+    "defaultvalue": "100",
+    "range": {
+      "min": 0,
+      "max": 500
+    },
+    "type": "integer",
+    "locale": {
+      "en": "Percentage of range at which entities are broadcasted",
+      "ja": "エンティティがブロードキャストされる範囲のパーセンテージ"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "force-gamemode",
+    "defaultvalue": "false",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Force players to join in the default game mode",
+          "ja": "プレイヤーがデフォルトのゲームモードで参加することを強制します"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Allow players to keep their previous game mode",
+          "ja": "プレイヤーが前回のゲームモードを保持することを許可します"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Forces players to use the default game mode",
+      "ja": "プレイヤーにデフォルトのゲームモードを強制します"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "function-permission-level",
+    "defaultvalue": "2",
+    "range": {
+      "min": 1,
+      "max": 4
+    },
+    "type": "integer",
+    "locale": {
+      "en": "Sets the permission level for function commands",
+      "ja": "関数コマンドの権限レベルを設定します"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "gamemode",
+    "defaultvalue": "survival",
+    "type": "enum",
+    "options": [
+      {
+        "value": "survival",
+        "locale": {
+          "en": "Survival",
+          "ja": "サバイバル"
+        }
+      },
+      {
+        "value": "creative",
+        "locale": {
+          "en": "Creative",
+          "ja": "クリエイティブ"
+        }
+      },
+      {
+        "value": "adventure",
+        "locale": {
+          "en": "Adventure",
+          "ja": "アドベンチャー"
+        }
+      },
+      {
+        "value": "spectator",
+        "locale": {
+          "en": "Spectator",
+          "ja": "スペクテイター"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Default game mode for the server",
+      "ja": "サーバーのデフォルトゲームモード"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "generate-structures",
+    "defaultvalue": "true",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Generate structures",
+          "ja": "構造物を生成する"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Do not generate structures",
+          "ja": "構造物を生成しない"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Allows structures like villages to generate",
+      "ja": "村などの構造物が生成されることを許可します"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "generator-settings",
+    "defaultvalue": "{}",
+    "type": "string",
+    "locale": {
+      "en": "Settings for the world generator",
+      "ja": "ワールドジェネレーターの設定"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "hardcore",
+    "defaultvalue": "false",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enable hardcore mode",
+          "ja": "ハードコアモードを有効にする"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Disable hardcore mode",
+          "ja": "ハードコアモードを無効にする"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Enables hardcore mode",
+      "ja": "ハードコアモードを有効にします"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "hide-online-players",
+    "defaultvalue": "false",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Hide players",
+          "ja": "プレイヤーを隠す"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Show players",
+          "ja": "プレイヤーを表示する"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Hides online players from the server list",
+      "ja": "サーバーリストからオンラインプレイヤーを隠します"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "initial-disabled-packs",
+    "defaultvalue": "",
+    "type": "string",
+    "locale": {
+      "en": "Packs initially disabled for players",
+      "ja": "プレイヤーに最初に無効にされるパック"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "initial-enabled-packs",
+    "defaultvalue": "vanilla",
+    "type": "string",
+    "locale": {
+      "en": "Packs initially enabled for players",
+      "ja": "プレイヤーに最初に有効にされるパック"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "level-name",
+    "defaultvalue": "world",
+    "type": "string",
+    "locale": {
+      "en": "The name of the level",
+      "ja": "レベルの名前"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "level-seed",
+    "defaultvalue": "",
+    "type": "string",
+    "locale": {
+      "en": "The seed used for generating the world",
+      "ja": "ワールド生成に使用するシード"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "level-type",
+    "defaultvalue": "minecraft:normal",
+    "type": "enum",
+    "options": [
+      {
+        "value": "minecraft:normal",
+        "locale": {
+          "en": "Normal world",
+          "ja": "通常のワールド"
+        }
+      },
+      {
+        "value": "minecraft:flat",
+        "locale": {
+          "en": "Flat world",
+          "ja": "フラットワールド"
+        }
+      },
+      {
+        "value": "minecraft:large_biomes",
+        "locale": {
+          "en": "Large Biomes",
+          "ja": "大きなバイオーム"
+        }
+      },
+      {
+        "value": "minecraft:amplified",
+        "locale": {
+          "en": "Amplified",
+          "ja": "アンプリファイド"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Defines the type of world to generate",
+      "ja": "生成するワールドのタイプを定義します"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "log-ips",
+    "defaultvalue": "true",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Log IP addresses",
+          "ja": "IPアドレスをログに記録する"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Do not log IP addresses",
+          "ja": "IPアドレスをログに記録しない"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Logs players' IP addresses",
+      "ja": "プレイヤーのIPアドレスを記録します"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "max-chained-neighbor-updates",
+    "defaultvalue": "1000000",
+    "type": "integer",
+    "locale": {
+      "en": "Sets the maximum number of neighbor block updates chained",
+      "ja": "隣接ブロックのチェイン更新の最大数を設定します"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "max-build-height",
+    "defaultvalue": "256",
+    "type": "integer",
+    "locale": {
+      "en": "Maximum number of height players can build",
+      "ja": "建築が許可される最高高度"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "max-players",
+    "defaultvalue": "20",
+    "type": "integer",
+    "range": {
+      "min": 0,
+      "max": 99999
+    },
+    "locale": {
+      "en": "Maximum number of players allowed on the server",
+      "ja": "サーバーに許可されるプレイヤーの最大数"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "max-tick-time",
+    "defaultvalue": "60000",
+    "type": "integer",
+    "range": {
+      "min": -1,
+      "max": 60000
+    },
+    "locale": {
+      "en": "Maximum tick time in milliseconds",
+      "ja": "ミリ秒単位の最大ティック時間"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "max-world-size",
+    "defaultvalue": "29999984",
+    "type": "integer",
+    "range": {
+      "min": 1,
+      "max": 29999984
+    },
+    "locale": {
+      "en": "Maximum world size",
+      "ja": "ワールドの最大サイズ"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "motd",
+    "defaultvalue": "A Minecraft Server",
+    "type": "string",
+    "locale": {
+      "en": "Message in the server list",
+      "ja": "サーバーリストメッセージ"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "network-compression-threshold",
+    "defaultvalue": "256",
+    "type": "integer",
+    "locale": {
+      "en": "The threshold size for compressing network packets",
+      "ja": "ネットワークパケットを圧縮するためのしきい値"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "online-mode",
+    "defaultvalue": "true",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enforce online mode",
+          "ja": "オンラインモードを強制する"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Do not enforce online mode",
+          "ja": "オンラインモードを強制しない"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Enforces online mode and account verification",
+      "ja": "オンラインモードとアカウント検証を強制します"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "op-permission-level",
+    "defaultvalue": "4",
+    "type": "integer",
+    "options": [
+      {
+        "value": "1",
+        "locale": {
+          "en": "Level 1 ignores spawn protection",
+          "ja": "レベル1はスポーン保護を無視します"
+        }
+      },
+      {
+        "value": "2",
+        "locale": {
+          "en": "Level 2 is the authority level equivalent to the command block including subordinate privileges",
+          "ja": "レベル2は下位権限を含むコマンドブロックと同等の権限レベルです"
+        }
+      },
+      {
+        "value": "3",
+        "locale": {
+          "en": "Level 3 can execute most commands, including subordinate privileges",
+          "ja": "レベル3は下位権限を含めほとんどのコマンドを実行可能です"
+        }
+      },
+      {
+        "value": "4",
+        "locale": {
+          "en": "Level 4 is the highest level of authority and is the same as the console",
+          "ja": "レベル4は最上位権限でありコンソールと同じ権限です"
+        }
+      }
+    ],
+    "locale": {
+      "en": "/opで与えられるオペレーターの権限",
+      "ja": "Operator privileges granted in /op"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "player-idle-timeout",
+    "defaultvalue": "0",
+    "type": "integer",
+    "locale": {
+      "en": "Player idle timeout in minutes",
+      "ja": "プレイヤーのアイドルタイムアウト（分）"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "prevent-proxy-connections",
+    "defaultvalue": "false",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Prevent proxy connections",
+          "ja": "プロキシ接続を防ぐ"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Allow proxy connections",
+          "ja": "プロキシ接続を許可する"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Prevents connections through proxies",
+      "ja": "プロキシを介した接続を防止します"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "pvp",
+    "defaultvalue": "true",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enable PvP",
+          "ja": "PvPを有効にする"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Disable PvP",
+          "ja": "PvPを無効にする"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Enables or disables player vs player combat",
+      "ja": "プレイヤー対プレイヤーの戦闘を有効または無効にします"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "query.port",
+    "defaultvalue": "25565",
+    "type": "integer",
+    "locale": {
+      "en": "Port used for GameSpy4 query",
+      "ja": "GameSpy4クエリに使用するポート"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "rate-limit",
+    "defaultvalue": "0",
+    "type": "integer",
+    "locale": {
+      "en": "Sets rate limit for incoming packets",
+      "ja": "受信パケットのレート制限を設定します"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "rcon.password",
+    "defaultvalue": "",
+    "type": "string",
+    "locale": {
+      "en": "Password for RCON access",
+      "ja": "RCONアクセスのパスワード"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "rcon.port",
+    "defaultvalue": "25575",
+    "type": "integer",
+    "locale": {
+      "en": "Port used for RCON",
+      "ja": "RCONに使用されるポート"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "region-file-compression",
+    "defaultvalue": "deflate",
+    "type": "enum",
+    "options": [
+      {
+        "value": "none",
+        "locale": {
+          "en": "No compression",
+          "ja": "圧縮なし"
+        }
+      },
+      {
+        "value": "gzip",
+        "locale": {
+          "en": "GZIP compression",
+          "ja": "GZIP圧縮"
+        }
+      },
+      {
+        "value": "deflate",
+        "locale": {
+          "en": "Deflate compression",
+          "ja": "Deflate圧縮"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Compression method for region files",
+      "ja": "リージョンファイルの圧縮方式"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "require-resource-pack",
+    "defaultvalue": "false",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Require resource pack",
+          "ja": "リソースパックを必須にする"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Do not require resource pack",
+          "ja": "リソースパックを必須にしない"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Requires players to use a resource pack",
+      "ja": "プレイヤーにリソースパックの使用を必須にします"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "resource-pack",
+    "defaultvalue": "",
+    "type": "string",
+    "locale": {
+      "en": "URL of the resource pack",
+      "ja": "リソースパックのURL"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "resource-pack-id",
+    "defaultvalue": "",
+    "type": "string",
+    "locale": {
+      "en": "ID of the resource pack",
+      "ja": "リソースパックのID"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "resource-pack-prompt",
+    "defaultvalue": "",
+    "type": "string",
+    "locale": {
+      "en": "Prompt shown to players when a resource pack is required",
+      "ja": "リソースパックが必要な場合にプレイヤーに表示されるプロンプト"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "resource-pack-sha1",
+    "defaultvalue": "",
+    "type": "string",
+    "locale": {
+      "en": "SHA1 hash of the resource pack",
+      "ja": "リソースパックのSHA1ハッシュ"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "server-ip",
+    "defaultvalue": "",
+    "type": "string",
+    "locale": {
+      "en": "IP address the server should bind to",
+      "ja": "サーバーがバインドするIPアドレス"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "server-port",
+    "defaultvalue": "25565",
+    "type": "integer",
+    "locale": {
+      "en": "Port the server will listen on",
+      "ja": "サーバーがリッスンするポート"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "simulation-distance",
+    "defaultvalue": "10",
+    "type": "integer",
+    "locale": {
+      "en": "Simulation distance in chunks",
+      "ja": "チャンク単位のシミュレーション距離"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "spawn-animals",
+    "defaultvalue": "true",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Spawn animals",
+          "ja": "動物をスポーンさせる"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Do not spawn animals",
+          "ja": "動物をスポーンさせない"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Allows animals to spawn",
+      "ja": "動物がスポーンすることを許可します"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "spawn-monsters",
+    "defaultvalue": "true",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Spawn monsters",
+          "ja": "モンスターをスポーンさせる"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Do not spawn monsters",
+          "ja": "モンスターをスポーンさせない"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Allows monsters to spawn",
+      "ja": "モンスターがスポーンすることを許可します"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "spawn-npcs",
+    "defaultvalue": "true",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Spawn NPCs",
+          "ja": "NPCをスポーンさせる"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Do not spawn NPCs",
+          "ja": "NPCをスポーンさせない"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Allows NPCs to spawn",
+      "ja": "NPCがスポーンすることを許可します"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "spawn-protection",
+    "defaultvalue": "16",
+    "type": "integer",
+    "locale": {
+      "en": "Size of the spawn protection area",
+      "ja": "スポーン保護エリアのサイズ"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "sync-chunk-writes",
+    "defaultvalue": "true",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enable synchronous chunk writes",
+          "ja": "同期チャンク書き込みを有効にする"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Disable synchronous chunk writes",
+          "ja": "同期チャンク書き込みを無効にする"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Enables synchronous chunk writing",
+      "ja": "チャンクの同期書き込みを有効にします"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "text-filtering-config",
+    "defaultvalue": "",
+    "type": "string",
+    "locale": {
+      "en": "Text filtering configuration",
+      "ja": "テキストフィルタリングの設定"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "use-native-transport",
+    "defaultvalue": "true",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Use native transport",
+          "ja": "ネイティブトランスポートを使用する"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Do not use native transport",
+          "ja": "ネイティブトランスポートを使用しない"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Uses native transport for network communication",
+      "ja": "ネットワーク通信にネイティブトランスポートを使用します"
+    }
+  },
+  {
+    "hidden": false,
+    "key": "view-distance",
+    "defaultvalue": "10",
+    "type": "integer",
+    "range": {
+      "min": 2,
+      "max": 32
+    },
+    "locale": {
+      "en": "View distance in chunks",
+      "ja": "チャンク単位の視界距離"
+    }
+  },
+  {
+    "hidden": true,
+    "key": "white-list",
+    "defaultvalue": "false",
+    "type": "boolean",
+    "options": [
+      {
+        "value": "true",
+        "locale": {
+          "en": "Enable whitelist",
+          "ja": "ホワイトリストを有効にする"
+        }
+      },
+      {
+        "value": "false",
+        "locale": {
+          "en": "Disable whitelist",
+          "ja": "ホワイトリストを無効にする"
+        }
+      }
+    ],
+    "locale": {
+      "en": "Enables server whitelist",
+      "ja": "サーバーホワイトリストを有効にします"
+    }
+  }
+]

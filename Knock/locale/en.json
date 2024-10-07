@@ -1,0 +1,247 @@
+﻿{
+  "channel_name": {
+    "create_server": "Create Channel - ",
+    "manage_server": "Manage Channel - "
+  },
+  "embed": {
+    "welcome": "**Knock!**",
+    "field1_name": "**✨What's New!** (ver 1.0)",
+    "field1_value": "Knock!",
+    "scenario_created": {
+      "title": "🧐  Could not create channel",
+      "description": "**[Your scenario channel]({0})** has already been created"
+    },
+    "channel_create": {
+      "title": "✅  Success !!",
+      "description": "**[A channel]({0})** has been created for you"
+    },
+    "channel_delete": {
+      "title": "📢  This channel will be deleted...",
+      "description": "**[A channel]({0})** has been created for you"
+    },
+    "create_server": {
+      "not_registered_account": {
+        "title": "🤔  Not registered...",
+        "description": "Your Minecraft account is not registered with Knock"
+      },
+      "minecraft_username_not_found": {
+        "title": "❌  Username not found...",
+        "description": "Please enter your correct username"
+      },
+      "minecraft_username_found": {
+        "description": "Are you the owner of this account?"
+      },
+      "server_container_builder": {
+        "title": "Server builder",
+        "server_name": "Server name",
+        "server_application": "Server application",
+        "server_version": "Game version",
+        "server_build": "Server build"
+      },
+      "type_name": {
+        "title": "📛  Server name",
+        "description": "Enter the name of the server to be created"
+      },
+      "select_app": {
+        "title": "🌾  Server application",
+        "description": "Select a server application"
+      },
+      "select_version": {
+        "title": "🧭  Server version",
+        "description": "Select a server version"
+      },
+      "select_memory_amount": {
+        "title": "🤥  Memory amount",
+        "description": "Select the amount of memory to be used for the game server"
+      },
+      "confirmation": {
+        "title": "🥴  Confirmation",
+        "description": "Do you want to create a server with this configuration?",
+        "field": {
+          "server_name": "Server name",
+          "server_app": "Server application",
+          "server_version": "Server version",
+          "server_memory": "Memory amount",
+          "stored_location": "Stored destination"
+        }
+      },
+      "select_server": {
+        "title": "🗃️  Select a server",
+        "description": "Select the server where you want to store your data"
+      },
+      "server_create_waiting": {
+        "title": "⌛  Creating a server",
+        "description": "Please wait for a second..."
+      },
+      "server_create_success": {
+        "title": "🎉  Success",
+        "description": "Your server has been created."
+      },
+      "server_create_failed": {
+        "title": "🤬  Failed",
+        "description": "Failed to create your server. Please retry."
+      }
+    },
+    "manage_server": {
+      "already_created_thread": {
+        "title": "🙈  Thread already created"
+      },
+      "manage_top": {
+        "title": "🛑  **{0}** - Management dashboard",
+        "fields": {
+          "app": "Server application",
+          "version": "Version",
+          "memory": "Memory amount"
+        }
+      },
+      "server_properties": {
+        "select_property": {
+          "title": "📝  Select server setting"
+        },
+        "select_value": {
+          "title": "🤏  Select value",
+          "description": "Key : **{0}** \nDescription : **{1}**\nCurrent value : **{2}**"
+        },
+        "input_value": {
+          "title": "⌨️  Input value",
+          "description": "Key : **{0}** \nDescription : **{1}**\nCurrent value : **{2}**",
+          "not_set": "[No value set]"
+        },
+        "invalid_value": {
+          "title": "🚭  Invalid value",
+          "description": "Please retype value"
+        },
+        "success": {
+          "title": "✅  The value was set",
+          "description": "Key : **{0}**\nValue : **{1}**"
+        }
+
+      }
+
+    }
+  },
+
+  "modal": {
+    "register_account": {
+      "title": "📝  Register account",
+      "minecraft_name": "Minecraft usermame",
+      "minecraft_name_placeholder": "username"
+    },
+    "type_name": {
+      "title": "Enter a server name",
+      "label": "Server name",
+      "placeholder": "name..."
+    },
+    "server_property_value": {
+      "title": "Input property value",
+      "label": "Property value",
+      "placeholder": "value...",
+      "placeholder_ranged": "value... ({0} - {1})"
+    }
+  },
+
+  "button": {
+    "create_server": "Create the new server",
+    "load_server": "Open server",
+    "register_minecraft_account": "Register your account",
+    "register_minecraft_account_confirm": "Register",
+    "register_minecraft_account_retry": "Retry",
+    "server_setup": {
+      "back": "Back",
+      "next": "Next",
+      "type_name": "Enter a name",
+      "choose_app": "Choose a version",
+      "confirm": "Generate"
+    },
+    "server_properties": {
+      "open_input_property_value": "Input value",
+      "continue": "Set value again",
+      "close": "Close"
+    }
+    
+    
+  },
+
+  "selectmenu": {
+    "select_app": {
+      "label": "Select a server application...",
+      "options": {
+        "paper": {
+          "title": "Paper",
+          "description": "Lightweight plugin server application"
+        },
+        "forge": {
+          "title": "Forge",
+          "description": "Under maintainance..."
+        },
+        "fabric": {
+          "title": "Fabric",
+          "description": "Under maintainance..."
+        }
+      }
+    },
+    "select_version": {
+      "label": "Select a server version..."
+    },
+    "select_memory_amount": {
+      "label": "Select memory amount...",
+      "options": {
+        "amount_2G": {
+          "title": "2.0 GB",
+          "description": "A server suitable for small group game play (4 - 6 players)"
+        },
+        "amount_4G": {
+          "title": "4.0 GB",
+          "description": "A server that can do most things (8 - 12 players)"
+        },
+        "amount_8G": {
+          "title": "8.0 GB",
+          "description": "A server that can do most things, including large mods (12 - 20 players)"
+        }
+      }
+    },
+    "select_server": {
+      "label": "Select server..."
+    },
+    "manage_server_actions": {
+      "label": "Select management action...",
+      "options": {
+        "edit_server_properties": {
+          "title": "Edit server settings",
+          "description": "Configure server.properties to change server configuration",
+          "icon": "📝"
+        }
+      }
+    },
+    "select_server_properties": {
+      "label": "Select server property..."
+    },
+    "select_property_value": {
+      "label": "Select value..."
+    }
+  },
+
+  "command": {
+    "setchannel": {
+      "invalid": "The specified channel is not valid"
+    }
+  },
+
+  "threads": {
+    "edit_server_properties": "Editing server setting"
+  },
+
+  "error": {
+    "error": "Error",
+    "fatal": "Fatal Error : ",
+    "no_token": "Token is not set",
+    "no_channel_id": "Channel ID is not set",
+    "channel_invalid": "Channel is not valid",
+
+    "data": {
+      "duplicated": "The data you are trying to add is duplicated",
+      "file_not_found": "The data you are trying to set is not found",
+      "key_not_found": "The specified key does not exist"
+    }
+  }
+}
