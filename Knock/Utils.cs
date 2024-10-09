@@ -45,5 +45,10 @@ namespace Knock
 
             return builder;
         }
+
+        public static T[] ArrayOf<T>(params T[] values)
+        {
+            return values;
+        }
     }
 }
