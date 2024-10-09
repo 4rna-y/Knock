@@ -43,9 +43,17 @@ namespace Knock.Services
 
         public IWebSocketConnection GetConnection(string address) 
             => containers.FirstOrDefault(
-                x => address.Equals($"{x.ConnectionInfo.ClientIpAddress}:{x.ConnectionInfo.ClientPort}"));
+                x => address.Equals($"{x.ConnectionInfo.ClientIpAddress}:{x.ConnectionInfo.ClientPort}")); 
 
         public List<IWebSocketConnection> GetConnections() => containers;
+
+        public IEnumerable<string> GetConnectionAdresses()
+        {
+            foreach (IWebSocketConnectionInfo connection in containers)
+            {
+                yield return $"{connection.ClientIpAddress}:{connection.ClientPort}";
+            }
+        }
 
         public void Start()
         {

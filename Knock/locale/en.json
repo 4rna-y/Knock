@@ -3,7 +3,12 @@
     "create_server": "Create Channel - ",
     "manage_server": "Manage Channel - "
   },
+
   "embed": {
+
+    //
+    // Uncategorized
+    //
     "welcome": "**Knock!**",
     "field1_name": "**✨What's New!** (ver 1.0)",
     "field1_value": "Knock!",
@@ -19,18 +24,26 @@
       "title": "📢  This channel will be deleted...",
       "description": "**[A channel]({0})** has been created for you"
     },
+
+    //
+    // Server creation
+    //
     "create_server": {
+
       "not_registered_account": {
         "title": "🤔  Not registered...",
         "description": "Your Minecraft account is not registered with Knock"
       },
+
       "minecraft_username_not_found": {
         "title": "❌  Username not found...",
         "description": "Please enter your correct username"
       },
+
       "minecraft_username_found": {
         "description": "Are you the owner of this account?"
       },
+
       "server_container_builder": {
         "title": "Server builder",
         "server_name": "Server name",
@@ -38,22 +51,27 @@
         "server_version": "Game version",
         "server_build": "Server build"
       },
+
       "type_name": {
         "title": "📛  Server name",
         "description": "Enter the name of the server to be created"
       },
+
       "select_app": {
         "title": "🌾  Server application",
         "description": "Select a server application"
       },
+
       "select_version": {
         "title": "🧭  Server version",
         "description": "Select a server version"
       },
+
       "select_memory_amount": {
         "title": "🤥  Memory amount",
         "description": "Select the amount of memory to be used for the game server"
       },
+
       "confirmation": {
         "title": "🥴  Confirmation",
         "description": "Do you want to create a server with this configuration?",
@@ -65,27 +83,37 @@
           "stored_location": "Stored destination"
         }
       },
+
       "select_server": {
         "title": "🗃️  Select a server",
         "description": "Select the server where you want to store your data"
       },
+
       "server_create_waiting": {
         "title": "⌛  Creating a server",
         "description": "Please wait for a second..."
       },
+
       "server_create_success": {
         "title": "🎉  Success",
         "description": "Your server has been created."
       },
+
       "server_create_failed": {
         "title": "🤬  Failed",
         "description": "Failed to create your server. Please retry."
       }
     },
+
+    //
+    // Server management
+    //
     "manage_server": {
+
       "already_created_thread": {
         "title": "🙈  Thread already created"
       },
+
       "manage_top": {
         "title": "🛑  **{0}** - Management dashboard",
         "fields": {
@@ -94,7 +122,9 @@
           "memory": "Memory amount"
         }
       },
+
       "server_properties": {
+
         "select_property": {
           "title": "📝  Select server setting"
         },
@@ -117,7 +147,15 @@
         }
 
       }
+    },
 
+    //
+    // Server loading
+    //
+    "load_server": {
+      "owned_server_not_found": {
+        "title": "❓  There is no server that you own"
+      }
     }
   },
 
@@ -127,11 +165,13 @@
       "minecraft_name": "Minecraft usermame",
       "minecraft_name_placeholder": "username"
     },
+
     "type_name": {
       "title": "Enter a server name",
       "label": "Server name",
       "placeholder": "name..."
     },
+
     "server_property_value": {
       "title": "Input property value",
       "label": "Property value",
@@ -142,10 +182,15 @@
 
   "button": {
     "create_server": "Create the new server",
+
     "load_server": "Open server",
+
     "register_minecraft_account": "Register your account",
+
     "register_minecraft_account_confirm": "Register",
+
     "register_minecraft_account_retry": "Retry",
+
     "server_setup": {
       "back": "Back",
       "next": "Next",
@@ -153,13 +198,12 @@
       "choose_app": "Choose a version",
       "confirm": "Generate"
     },
+
     "server_properties": {
       "open_input_property_value": "Input value",
       "continue": "Set value again",
       "close": "Close"
     }
-    
-    
   },
 
   "selectmenu": {

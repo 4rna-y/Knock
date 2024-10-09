@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Discord;
+using Knock.Services;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +30,20 @@ namespace Knock
             {
                 if (i.Equals(item)) bag.TryTake(out _);
             }
+        }
+
+        public static EmbedBuilder CreateLocalized(this EmbedBuilder builder, string keyParent)
+        {
+            LocaleService locale = Program.GetServiceProvider().GetRequiredService<LocaleService>();
+            builder.WithTitle(locale.Get(keyParent + ".title"));
+
+            string desc = locale.Get(keyParent + ".description");
+            if (!string.IsNullOrWhiteSpace(desc))
+            {
+                builder.WithDescription(desc);
+            }
+
+            return builder;
         }
     }
 }

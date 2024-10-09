@@ -1,4 +1,5 @@
-﻿using Knock.Models;
+﻿using Fleck;
+using Knock.Models;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -7,7 +8,6 @@ using System.Reactive;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Knock.Services
 {
@@ -18,7 +18,8 @@ namespace Knock.Services
         private ConcurrentBag<Guid> lockedServer;
         private ConcurrentDictionary<string, ServerContainerBuilder> builders;
 
-        public ServerService(DataService data) 
+        public ServerService(
+            DataService data) 
         {
             this.data = data;
 
@@ -42,6 +43,22 @@ namespace Knock.Services
         public ServerContainer GetContainer(Guid id)
         {
             return data.Get<ServerContainers>("containers").Containers.FirstOrDefault(x => x.Id.Equals(id));
+        }
+
+        public IEnumerable<ServerContainer> GetContainers(
+            ulong userId, IEnumerable<string> connections)
+        {
+            ServerContainers containers = data.Get<ServerContainers>("containers");
+            foreach (ServerContainer container in containers.Containers)
+            {
+                if (connections.Contains(container.StoredLocation))
+                {
+                    if (container.Owners.Contains(userId))
+                    {
+                        yield return container;
+                    }
+                }
+            }
         }
 
         public bool RemoveContainer(Guid id)
