@@ -23,6 +23,7 @@ namespace Knock.Scenarios
             this.serverId = serverId;
 
             Models.Add(new ScenarioModel("select-action", SelectManagementAction));
+            Models.Add(new ScenarioModel("launch", Launch));
 
             Models.Add(new ScenarioModel(
                 "select-server-properties-back", async arg => await SwapBackSelectMenuItem(arg, "select-server-properties")));
@@ -33,6 +34,7 @@ namespace Knock.Scenarios
         public override async Task Start()
         {
             ServerContainer container = Server.GetContainer(serverId);
+            Server.Lock(serverId);
 
             EmbedBuilder embedBuilder = new EmbedBuilder()
                 .WithTitle(string.Format(Locale.Get("embed.manage_server.manage_top.title"), container.Name))
@@ -62,13 +64,22 @@ namespace Knock.Scenarios
                     .WithValue("server-properties"));
 
             ComponentBuilder componentBuilder = new ComponentBuilder()
-                .WithSelectMenu(menuBuilder);
+                .WithSelectMenu(menuBuilder)
+                .WithButton(
+                    Locale.Get("button.manage_server.launch"),
+                    $"scenario.{ScenarioId}.launch",
+                    ButtonStyle.Success,
+                    new Emoji("🏃"),
+                    row: 1);
 
             await Scenario.ChangeChannelName(this, Locale.Get("channel_name.manage_server") + container.Name);
 
             manageMessage = await TextChannel.SendMessageAsync(
                 embed: embedBuilder.Build(), 
                 components: componentBuilder.Build());
+
+            MessageIds.Add("manage", manageMessage.Id);
+            ComponentMessageIds.Add("manage", manageMessage.Id);
         }
 
         private async Task SelectManagementAction(SocketInteraction arg)
@@ -76,12 +87,16 @@ namespace Knock.Scenarios
             SocketMessageComponent component = arg as SocketMessageComponent;
             if (component is null) return;
 
+            await ToggleMessage("manage", true);
+
             string text = string.Join(", ", component.Data.Values);
 
             if (text.Equals("server-properties"))
             {
                 await ActionEditServerProperties(component);
             }
+
+            await ToggleMessage("manage", false);
         }
 
         private async Task ActionEditServerProperties(SocketMessageComponent component)
@@ -100,6 +115,11 @@ namespace Knock.Scenarios
                 new EditServerPropertiesThreadScenario(this, Locale.Get("threads.edit_server_properties"), serverId));
 
             await component.DeferAsync();
+        }
+
+        private async Task Launch(SocketInteraction arg)
+        {
+            
         }
     }
 }

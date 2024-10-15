@@ -42,15 +42,5 @@ namespace Knock.Services
 
             return sb.ToString();
         }
-
-        public Embed Create(Color color, params string[] keys)
-        {
-            return new EmbedBuilder()
-                .WithTitle(Get("error.error"))
-                .WithColor(color)
-                .WithDescription(Get(keys))
-                .Build();
-            
-        }
     }
 }

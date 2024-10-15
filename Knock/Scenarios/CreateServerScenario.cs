@@ -574,7 +574,7 @@ namespace Knock.Scenarios
                 .WithDescription(Locale.Get($"embed.create_server.server_create_{(res ? "success" : "failed")}.description"))
                 .WithColor(Color[res ? "success" : "error"]);
 
-            ScheduleBase schedule = new UnregisterScenarioSchedule(ScenarioId, 60);
+            ScheduleBase schedule = new UnregisterScenarioSchedule(ScenarioId, 10);
             Schedule.Resister(schedule);
 
             EmbedBuilder deleteEmbedBuilder = new EmbedBuilder()

@@ -10,6 +10,7 @@ namespace Knock.Cluster.Models
     {
         public bool Success { get; set; }
         public Exception Exception { get; set; }
+        public int Code { get; set; } 
 
         public ErrorInfo()
         {
@@ -20,6 +21,12 @@ namespace Knock.Cluster.Models
         {
             Exception = ex;
             Success = false;
+        }
+
+        public ErrorInfo(int code)
+        {
+            Success = false;
+            Code = code;
         }
     }
 }

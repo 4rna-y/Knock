@@ -184,6 +184,64 @@ namespace Knock.Scenarios
         {
             await SwapSelectMenuItem(arg, key, x => x.GetNextSegmentedItems());
         }
+        protected async Task ResetSelectMenu(string key)
+        {
+            if (ComponentMessageIds.ContainsKey(key))
+            {
+                RestMessage msg = await ThreadChannel.GetMessageAsync(ComponentMessageIds[key]);
+                List<ActionRowComponent> rows = msg.Components.ToList();
+                ComponentBuilder builder = new ComponentBuilder();
+
+                foreach (ActionRowComponent row in rows)
+                {
+                    ActionRowBuilder rowBuilder = new ActionRowBuilder();
+                    List<IMessageComponent> comps = row.Components.ToList();
+                    foreach (IMessageComponent comp in comps)
+                    {
+                        if (comp is ButtonComponent button)
+                        {
+                            rowBuilder.WithButton(
+                                button.Label,
+                                button.CustomId,
+                                button.Style,
+                                button.Emote,
+                                button.Url,
+                                button.IsDisabled);
+                        }
+                        else
+                        if (comp is SelectMenuComponent menu)
+                        {
+                            List<SelectMenuOptionBuilder> optionBuilders = new List<SelectMenuOptionBuilder>();
+                            foreach (SelectMenuOption option in menu.Options)
+                            {
+                                SelectMenuOptionBuilder optionBuilder = new SelectMenuOptionBuilder()
+                                    .WithLabel(option.Label)
+                                    .WithValue(option.Value)
+                                    .WithDescription(option.Description)
+                                    .WithEmote(option.Emote)
+                                    .WithDefault(option.IsDefault.GetValueOrDefault());
+                                optionBuilders.Add(optionBuilder);
+                            }
+                            rowBuilder.WithSelectMenu(
+                                menu.CustomId,
+                                optionBuilders,
+                                menu.Placeholder,
+                                menu.MinValues,
+                                menu.MaxValues,
+                                menu.IsDisabled,
+                                menu.Type,
+                                menu.ChannelTypes.ToArray());
+                        }
+                    }
+                    builder.AddRow(rowBuilder);
+                }
+
+                await ThreadChannel.ModifyMessageAsync(ComponentMessageIds[key], x =>
+                {
+                    x.Components = builder.Build();
+                });
+            }
+        }
 
         public override async Task SetUp()
         {

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using NLog;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace Knock.Cluster.Services
         private readonly JsonService json;
 
         private DirectoryInfo containerDir;
+        private ConcurrentBag<Guid> launchedContainer;
 
         public ContainerService(
             IConfiguration config,
@@ -31,6 +33,8 @@ namespace Knock.Cluster.Services
             this.json = json;
 
             containerDir = new DirectoryInfo("containers");
+            launchedContainer = new ConcurrentBag<Guid>();
+
             if (!containerDir.Exists) containerDir.Create();
         }
 
@@ -138,6 +142,12 @@ namespace Knock.Cluster.Services
             if (kv.Length != 2) return Task.FromResult("");
 
             return Task.FromResult(kv[1]);
+        }
+
+        public async Task<ErrorInfo> Launch(Guid id)
+        {
+            if (launchedContainer.Contains(id)) return new ErrorInfo(1);
+
         }
     }
 }

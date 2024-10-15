@@ -5,10 +5,6 @@
   },
 
   "embed": {
-
-    //
-    // Uncategorized
-    //
     "welcome": "**Knock!**",
     "field1_name": "**✨What's New!** (ver 1.0)",
     "field1_value": "Knock!",
@@ -25,9 +21,6 @@
       "description": "**[A channel]({0})** has been created for you"
     },
 
-    //
-    // Server creation
-    //
     "create_server": {
 
       "not_registered_account": {
@@ -105,9 +98,6 @@
       }
     },
 
-    //
-    // Server management
-    //
     "manage_server": {
 
       "already_created_thread": {
@@ -149,12 +139,16 @@
       }
     },
 
-    //
-    // Server loading
-    //
     "load_server": {
       "owned_server_not_found": {
         "title": "❓  There is no server that you own"
+      },
+      "select_container": {
+        "title": "🐾  Select the server container"
+      },
+      "server_locked": {
+        "title": "🔒  This server is occupied by another user",
+        "description": "If you are set as a co-owner, the channel has already been created"
       }
     }
   },
@@ -181,6 +175,8 @@
   },
 
   "button": {
+    "close_scenario": "Dismiss",
+
     "create_server": "Create the new server",
 
     "load_server": "Open server",
@@ -203,6 +199,10 @@
       "open_input_property_value": "Input value",
       "continue": "Set value again",
       "close": "Close"
+    },
+
+    "manage_server": {
+      "launch": "Launch server"
     }
   },
 
@@ -262,6 +262,10 @@
     },
     "select_property_value": {
       "label": "Select value..."
+    },
+    "select_container": {
+      "label": "Select server container...",
+      "description": "Version: {0}, Last access: {1}"
     }
   },
 

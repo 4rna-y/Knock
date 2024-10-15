@@ -14,13 +14,15 @@ namespace Knock.Services
     public class ScenarioService
     {
         private readonly IConfiguration config;
+        private readonly LocaleService locale;
 
         private Dictionary<string, ScenarioBase> scenarios;
         private Dictionary<string, RestTextChannel> registeredChannels;
 
-        public ScenarioService(IConfiguration config)
+        public ScenarioService(IConfiguration config, LocaleService locale)
         {
             this.config = config;
+            this.locale = locale;
 
             registeredChannels = new Dictionary<string, RestTextChannel>();
             scenarios = new Dictionary<string, ScenarioBase>();
@@ -52,7 +54,14 @@ namespace Knock.Services
 
             registeredChannels.Add(channelScenario.ScenarioId, t);
 
-            IMessage msg = await t.SendMessageAsync($"{channelScenario.User.Mention}");
+            ComponentBuilder builder = new ComponentBuilder()
+                .WithButton(
+                    locale.Get("button.close_scenario"),
+                    $"scenario.{channelScenario.ScenarioId}.close-scenario",
+                    ButtonStyle.Secondary,
+                    new Emoji("👋"));
+
+            IMessage msg = await t.SendMessageAsync($"{channelScenario.User.Mention}", components: builder.Build());
             channelScenario.MentionMessageId = msg.Id;
 
             return t;

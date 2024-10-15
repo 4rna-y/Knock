@@ -34,6 +34,7 @@ namespace Knock.Cluster
                 .AddSingleton<WebSocketHandler>()
                 .AddSingleton<ResponseHandler>()
                 .AddSingleton<CommandService>()
+                .AddSingleton<ProcessesManager>()
                 .BuildServiceProvider();
 
             CommandService cmd = serviceProvider.GetRequiredService<CommandService>();

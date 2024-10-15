@@ -51,7 +51,7 @@ namespace Knock.Scenarios
         public abstract Task SetUp();
         public abstract Task Start();
 
-        public async Task Interact(string key, SocketInteraction arg)
+        public virtual async Task Interact(string key, SocketInteraction arg)
         {
             if (Models.FirstOrDefault(x => x.Id == key) is ScenarioModel model)
             {

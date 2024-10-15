@@ -114,6 +114,23 @@ namespace Knock
                 else
                 if (id[1].Equals("load_server"))
                 {
+                    if (scenario.IsInProgress<LoadServerScenario>(arg.User.Id))
+                    {
+                        ChannelScenarioBase s = scenario.GetScenario<LoadServerScenario>(arg.User.Id).FirstOrDefault() as ChannelScenarioBase;
+                        IMessage msg = await s.TextChannel.GetMessageAsync(s.MentionMessageId);
+                        EmbedBuilder embed = new EmbedBuilder()
+                            .WithTitle(locale.Get("embed.scenario_created.title"))
+                            .WithDescription(
+                                string.Format(locale.Get("embed.scenario_created.description"),
+                                msg.GetJumpUrl()))
+                            .WithColor(color["warning"]);
+
+                        await arg.RespondAsync(embed: embed.Build(), ephemeral: true);
+                        return;
+                    }
+
+                    await arg.DeferAsync();
+                    await scenario.Register(new LoadServerScenario(guild, arg.User, category));
                     
                 }
             }

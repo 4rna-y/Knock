@@ -49,9 +49,9 @@ namespace Knock.Services
 
         public IEnumerable<string> GetConnectionAdresses()
         {
-            foreach (IWebSocketConnectionInfo connection in containers)
+            foreach (IWebSocketConnection connection in containers)
             {
-                yield return $"{connection.ClientIpAddress}:{connection.ClientPort}";
+                yield return $"{connection.ConnectionInfo.ClientIpAddress}:{connection.ConnectionInfo.ClientPort}";
             }
         }
 
