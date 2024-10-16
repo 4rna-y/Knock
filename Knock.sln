@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Knock.Test", "Knock.Test\Kn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Knock.Cluster", "Knock.Cluster\Knock.Cluster.csproj", "{B4F62019-521C-4863-99B0-2EA660E7A230}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Knock.Transport", "Knock.Transport\Knock.Transport.csproj", "{A79ABA7B-687B-4F32-8983-672A5D4CC744}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Knock.Transport", "Knock.Transport\Knock.Transport.csproj", "{A79ABA7B-687B-4F32-8983-672A5D4CC744}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Knock.Shared", "Knock.Shared\Knock.Shared.csproj", "{A24F3B7D-BA7A-4386-81C2-3256469C8122}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{A79ABA7B-687B-4F32-8983-672A5D4CC744}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A79ABA7B-687B-4F32-8983-672A5D4CC744}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A79ABA7B-687B-4F32-8983-672A5D4CC744}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A24F3B7D-BA7A-4386-81C2-3256469C8122}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A24F3B7D-BA7A-4386-81C2-3256469C8122}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A24F3B7D-BA7A-4386-81C2-3256469C8122}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A24F3B7D-BA7A-4386-81C2-3256469C8122}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
