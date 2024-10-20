@@ -13,6 +13,5 @@ namespace Knock.Shared
         public string Message { get; }
         public byte[] GetRawMessage();
         public byte[] ToPacket();
-        public IResult FromPacket(byte[] data);
     }
 }

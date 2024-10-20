@@ -16,12 +16,13 @@ namespace Knock.Cluster.Services
             http = new HttpClient();
         }
 
-        public async Task Download(string url, DirectoryInfo dir, string name)
+        public async Task<string> Download(string url, DirectoryInfo dir, string name)
         {
             using HttpResponseMessage res = await http.GetAsync(url);
             using FileStream file = new FileStream(Path.Combine(dir.FullName, name), FileMode.Create);
             res.EnsureSuccessStatusCode();
             await res.Content.CopyToAsync(file);
+            return Path.Combine(dir.FullName, name);
         }
     }
 }

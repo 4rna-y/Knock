@@ -19,5 +19,18 @@ namespace Knock.Shared
         }
 
         public byte[] GetRawMessage() => Encoding.UTF8.GetBytes(Message);
+
+        public byte[] ToPacket()
+        {
+            byte[] rawMsg = GetRawMessage();
+            List<byte> dest = new List<byte>();
+
+            dest.AddRange(BitConverter.GetBytes(IsSuccess));
+            dest.AddRange(BitConverter.GetBytes(Code));
+            dest.AddRange(BitConverter.GetBytes(rawMsg.Length));
+            dest.AddRange(rawMsg);
+
+            return dest.ToArray();
+        }
     }
 }

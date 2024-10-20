@@ -1,4 +1,5 @@
 ﻿using Knock.Cluster.Models;
+using Knock.Shared;
 using Microsoft.Extensions.Configuration;
 using NLog;
 using System;
@@ -17,23 +18,24 @@ namespace Knock.Cluster.Services
         private readonly ILogger logger;
         private readonly HttpService http;
         private readonly JsonService json;
+        private readonly ProcessesManager process;
 
         private DirectoryInfo containerDir;
-        private ConcurrentBag<Guid> launchedContainer;
 
         public ContainerService(
             IConfiguration config,
             ILogger logger,
             HttpService http,
-            JsonService json)
+            JsonService json,
+            ProcessesManager process)
         {
             this.config = config;
             this.logger = logger;
             this.http = http;
             this.json = json;
+            this.process = process;
 
             containerDir = new DirectoryInfo("containers");
-            launchedContainer = new ConcurrentBag<Guid>();
 
             if (!containerDir.Exists) containerDir.Create();
         }
@@ -144,9 +146,10 @@ namespace Knock.Cluster.Services
             return Task.FromResult(kv[1]);
         }
 
-        public async Task<ErrorInfo> Launch(Guid id)
+        public async Task<IResult> Launch(Guid id)
         {
-            if (launchedContainer.Contains(id)) return new ErrorInfo(1);
+
+            return new Ok();
 
         }
     }

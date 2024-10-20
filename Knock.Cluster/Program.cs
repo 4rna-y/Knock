@@ -34,8 +34,13 @@ namespace Knock.Cluster
                 .AddSingleton<WebSocketHandler>()
                 .AddSingleton<ResponseHandler>()
                 .AddSingleton<CommandService>()
+                .AddSingleton<JavaProcessProvider>()
                 .AddSingleton<ProcessesManager>()
                 .BuildServiceProvider();
+
+            JavaProcessProvider jProvider = serviceProvider.GetRequiredService<JavaProcessProvider>();
+            await jProvider.Setup();
+
 
             CommandService cmd = serviceProvider.GetRequiredService<CommandService>();
 

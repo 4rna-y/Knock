@@ -9,7 +9,7 @@ namespace Knock.Shared
 {
     public class Ok : IResult
     {
-        public bool IsSuccess => true;
+        public bool IsSuccess { get; }
         public int Code { get; }
         public string Message { get; }
 
@@ -21,28 +21,26 @@ namespace Knock.Shared
             Message = message;
         }
 
+        private Ok(bool success, int code, string message)
+        {
+            IsSuccess = success;
+            Code = code;
+            Message = message;
+        }
+
         public byte[] GetRawMessage() => Encoding.UTF8.GetBytes(Message);
 
         public byte[] ToPacket()
         {
-            int code = Code | ((IsSuccess ? 1 : 0) << ((sizeof(int) * 8) - 1));
             byte[] rawMsg = GetRawMessage();
-            List<byte> res = new List<byte>();
+            List<byte> dest = new List<byte>();
             
-            res.AddRange(BitConverter.GetBytes(code));
-            res.AddRange(BitConverter.GetBytes(rawMsg.Length));
-            res.AddRange(rawMsg);
+            dest.AddRange(BitConverter.GetBytes(IsSuccess));
+            dest.AddRange(BitConverter.GetBytes(Code));
+            dest.AddRange(BitConverter.GetBytes(rawMsg.Length));
+            dest.AddRange(rawMsg);
 
-            return res.ToArray();
-        }
-
-        public IResult FromPacket(byte[] data)
-        {
-            int code = BitConverter.ToInt32(data, 0);
-            if ((code & (1 << ((sizeof(int) * 8) - 1))) != 1)
-            {
-                return new Ok();
-            }
+            return dest.ToArray();
         }
     }
 }

@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Knock.Shared\Knock.Shared.csproj" />
     <ProjectReference Include="..\Knock.Transport\Knock.Transport.csproj" />
   </ItemGroup>
 
