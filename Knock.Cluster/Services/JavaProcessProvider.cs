@@ -73,9 +73,10 @@ namespace Knock.Cluster.Services
             }
         }
 
-        public Process GetJavaProcess(LaunchInfo info, string wd)
+        public Process GetJavaProcess(Guid id, LaunchInfo info)
         {
             string java = GetJavaPath(info.Version);
+            DirectoryInfo dir = new DirectoryInfo(Path.Combine("containers", id.ToString()));
             Process process = new Process();
             ProcessStartInfo processInfo = new ProcessStartInfo()
             {
@@ -86,7 +87,7 @@ namespace Knock.Cluster.Services
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 RedirectStandardInput = true,
-                WorkingDirectory = wd,
+                WorkingDirectory = dir.FullName,
             };
             process.StartInfo = processInfo;
             return process;

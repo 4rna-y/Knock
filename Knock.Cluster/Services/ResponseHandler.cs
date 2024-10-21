@@ -1,4 +1,5 @@
 ﻿using Knock.Cluster.Models;
+using Knock.Shared;
 using Knock.Transport;
 using Knock.Transport.Enum;
 using NLog;
@@ -28,6 +29,7 @@ namespace Knock.Cluster.Services
             RequestTypes.Create => await ResponseCreateServer(request),
             RequestTypes.SetServerPropertyValue => await ResponseSetServerPropertyValue(request),
             RequestTypes.GetServerPropertyValue => await ResponseGetServerPropertyValue(request),
+            RequestTypes.Launch => await ResponseLaunch(request),
             _ => null
         };
 
@@ -122,6 +124,25 @@ namespace Knock.Cluster.Services
                 .WithRequestType(RequestTypes.GetServerPropertyValue)
                 .WithGuid(packet.Guid)
                 .WithData(Encoding.UTF8.GetBytes(value))
+                .Build();
+
+            return dest;
+        }
+
+        private async Task<DataPacket> ResponseLaunch(DataPacket packet)
+        {
+            logger.Info("Response Launch");
+
+            Guid guid = packet.GetGuidData(0);
+
+            IResult res = await container.Launch(guid);
+
+            DataPacket dest = new DataPacket.Builder()
+                .WithPacketType(PacketTypes.Response)
+                .WithDataType(DataTypes.Plain)
+                .WithRequestType(RequestTypes.Launch)
+                .WithGuid(packet.Guid)
+                .WithData(res.ToPacket())
                 .Build();
 
             return dest;

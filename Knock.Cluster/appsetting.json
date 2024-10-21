@@ -1,5 +1,7 @@
 {
   "server-address": "ws://0.0.0.0:54321",
   "local-address": "127.0.0.1:12345",
-  "memory-amount": "16"
+  "memory-amount": "16",
+  "container-port": "50000",
+  "max-container-count": "12"
 }

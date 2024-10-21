@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Knock.Cluster.Services
 {
-    public class ContainerService
+    public class ContainerService : IContainerServerPropertiesConfigureAdapter
     {
         private readonly IConfiguration config;
         private readonly ILogger logger;
@@ -148,9 +148,12 @@ namespace Knock.Cluster.Services
 
         public async Task<IResult> Launch(Guid id)
         {
+            LaunchInfo info = 
+                await json.LoadFile<LaunchInfo>(
+                    new DirectoryInfo(Path.Combine(containerDir.FullName, id.ToString())), 
+                    "launchinfo.json");
 
-            return new Ok();
-
+            return await process.Run(id, info, this);
         }
     }
 }

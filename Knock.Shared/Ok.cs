@@ -9,9 +9,9 @@ namespace Knock.Shared
 {
     public class Ok : IResult
     {
-        public bool IsSuccess { get; }
-        public int Code { get; }
-        public string Message { get; }
+        public bool IsSuccess { get; set; }
+        public int Code { get; set; }
+        public string Message { get; set; }
 
         public Ok() { }
 
@@ -37,7 +37,6 @@ namespace Knock.Shared
             
             dest.AddRange(BitConverter.GetBytes(IsSuccess));
             dest.AddRange(BitConverter.GetBytes(Code));
-            dest.AddRange(BitConverter.GetBytes(rawMsg.Length));
             dest.AddRange(rawMsg);
 
             return dest.ToArray();

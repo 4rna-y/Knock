@@ -11,6 +11,7 @@ namespace Knock.Transport.Enum
         Status = 1,
         Create,
         SetServerPropertyValue,
-        GetServerPropertyValue
+        GetServerPropertyValue,
+        Launch
     }
 }

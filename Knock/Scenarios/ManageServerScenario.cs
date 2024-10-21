@@ -3,6 +3,7 @@ using Discord.Rest;
 using Discord.WebSocket;
 using Knock.Models;
 using Knock.Services;
+using Knock.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -119,7 +120,11 @@ namespace Knock.Scenarios
 
         private async Task Launch(SocketInteraction arg)
         {
-            
+            await ToggleMessage("manage", true);
+            IResult res = await Request.Launch(serverId);
+            await ToggleMessage("manage", false);
+
+            await arg.RespondAsync(res.IsSuccess.ToString());
         }
     }
 }

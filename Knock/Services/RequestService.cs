@@ -1,6 +1,7 @@
 ﻿using Fleck;
 using Knock.Models;
 using Knock.Models.Response;
+using Knock.Shared;
 using Knock.Transport;
 using Knock.Transport.Enum;
 using Microsoft.Extensions.Configuration;
@@ -157,6 +158,35 @@ namespace Knock.Services
             byte[] res = await task.Task;
 
             return Encoding.UTF8.GetString(res);
+        }
+
+        public async Task<IResult> Launch(Guid containerId)
+        {
+            ServerContainer container =
+                data.Get<ServerContainers>("containers").Containers.FirstOrDefault(x => x.Id.Equals(containerId));
+            IWebSocketConnection connection =
+                this.GetConnections().FirstOrDefault(
+                    x => container.StoredLocation.Equals($"{x.ConnectionInfo.ClientIpAddress}:{x.ConnectionInfo.ClientPort}"));
+
+            List<byte> dest = new List<byte>();
+            dest.AddRange(container.Id.ToByteArray());
+
+            Guid id = Guid.NewGuid();
+            DataPacket packet = new DataPacket.Builder()
+                .WithPacketType(PacketTypes.Request)
+                .WithDataType(DataTypes.Plain)
+                .WithRequestType(RequestTypes.GetServerPropertyValue)
+                .WithGuid(id)
+                .WithData(dest.ToArray())
+                .Build();
+            byte[] req = webSocket.GetEncryptedData(packet);
+
+            await connection.Send(req);
+            webSocket.ResponseAwaitable.TryAdd(id, new TaskCompletionSource<byte[]>());
+            webSocket.ResponseAwaitable.TryGetValue(id, out TaskCompletionSource<byte[]> task);
+            byte[] res = await task.Task;
+
+            return ResultHelper.FromPacket(res);
         }
     }
 }
