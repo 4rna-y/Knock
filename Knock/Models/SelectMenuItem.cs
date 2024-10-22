@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Knock.Models
 {
+    /// <summary>
+    /// Model for storing select menu item
+    /// </summary>
     public class SelectMenuItem
     {
         public string Label { get; set; }

@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 
 namespace Knock.Scenarios
 {
+    /// <summary>
+    /// Base scenario for implementing text channel based scenario.
+    /// </summary>
     public class ChannelScenarioBase : ScenarioBase
     {
         public SocketCategoryChannel Category {  get; }

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Knock.Models
 {
+    /// <summary>
+    /// Base model for representing json model.
+    /// </summary>
     public class JsonModelBase
     {
         [JsonIgnore]

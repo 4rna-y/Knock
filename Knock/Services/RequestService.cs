@@ -175,7 +175,7 @@ namespace Knock.Services
             DataPacket packet = new DataPacket.Builder()
                 .WithPacketType(PacketTypes.Request)
                 .WithDataType(DataTypes.Plain)
-                .WithRequestType(RequestTypes.GetServerPropertyValue)
+                .WithRequestType(RequestTypes.Launch)
                 .WithGuid(id)
                 .WithData(dest.ToArray())
                 .Build();

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Knock.Models
 {
+    /// <summary>
+    /// Json model for caching dashboard message.
+    /// </summary>
     public class BotInfo : JsonModelBase
     {
         [JsonPropertyName("last-msg")]

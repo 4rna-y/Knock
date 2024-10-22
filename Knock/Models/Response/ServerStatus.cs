@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Knock.Models.Response
 {
+    /// <summary>
+    /// Model for storing server status.
+    /// </summary>
     public class ServerStatus
     {
         public byte ContainerCount { get; set; }

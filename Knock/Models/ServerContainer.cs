@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Knock.Models
 {
+    /// <summary>
+    /// Json model for representing container list.
+    /// </summary>
     public class ServerContainers : JsonModelBase
     {
         [JsonPropertyName("containers")]
@@ -18,6 +21,9 @@ namespace Knock.Models
         }
     }
 
+    /// <summary>
+    /// Json model for storing container info
+    /// </summary>
     public class ServerContainer
     {
         [JsonPropertyName("id")]

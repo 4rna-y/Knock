@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Knock.Models
 {
+    /// <summary>
+    /// Model for implementing selectmenu with multiple item page.
+    /// </summary>
     public class MultiPageableSelectMenu
     {
         public int Page { get; set; }

@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 
 namespace Knock.Scenarios
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class EditServerPropertiesThreadScenario : ThreadScenarioBase
     {
         private readonly Guid containerId;

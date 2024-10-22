@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Knock.Models
 {
+    /// <summary>
+    /// Json model for representing server.properties
+    /// </summary>
     public class ServerProperty
     {
         [JsonPropertyName("hidden")]
@@ -31,6 +34,9 @@ namespace Knock.Models
         public PropertyLocale Locale { get; set; }
     }
 
+    /// <summary>
+    /// Json model for representing a selectable option with localed discription. 
+    /// </summary>
     public class ValueOption
     {
         [JsonPropertyName("value")]
@@ -40,6 +46,9 @@ namespace Knock.Models
         public PropertyLocale Locale { get; set; }
     }
 
+    /// <summary>
+    /// Json model for representing localed description.
+    /// </summary>
     public class PropertyLocale
     {
         [JsonPropertyName("en")]
@@ -56,6 +65,9 @@ namespace Knock.Models
         };
     }
 
+    /// <summary>
+    /// Json model for representing a range of integer value.
+    /// </summary>
     public class RangedValue
     {
         [JsonPropertyName("min")]

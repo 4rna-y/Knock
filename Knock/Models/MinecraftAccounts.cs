@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Knock.Models
 {
+    /// <summary>
+    /// Json model for representing minecraft account list.
+    /// </summary>
     public class MinecraftAccounts : JsonModelBase
     {
         [JsonPropertyName("accounts")]
@@ -18,6 +21,9 @@ namespace Knock.Models
         }
     }
 
+    /// <summary>
+    /// Json model for storing minecraft account.
+    /// </summary>
     public class MinecraftAccount
     {
         [JsonPropertyName("discord-id")]

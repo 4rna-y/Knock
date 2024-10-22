@@ -19,6 +19,9 @@ using System.Xml.Linq;
 
 namespace Knock.Scenarios
 {
+    /// <summary>
+    /// Scenario for creating server container.
+    /// </summary>
     public class CreateServerScenario : ChannelScenarioBase
     {
         private int versionPage = 0;

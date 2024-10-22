@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 
 namespace Knock.Models
 {
+    /// <summary>
+    /// Model for storing http response and respond data.
+    /// </summary>
+    /// <typeparam name="T">Result type.</typeparam>
     public class HttpResponseModel<T>
     {
         public HttpStatusCode Code { get; }

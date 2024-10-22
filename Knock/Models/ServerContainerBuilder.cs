@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace Knock.Models
 {
+    /// <summary>
+    /// Model builder for container.
+    /// </summary>
     public class ServerContainerBuilder
     {
         public string Name { get; set; } = null;
