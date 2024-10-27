@@ -15,8 +15,11 @@ namespace Knock.Scenarios
 {
     public class ManageServerScenario : ChannelScenarioBase
     {
+        private bool _isLaunched;
         private Guid serverId;
         private RestUserMessage manageMessage;
+
+        
 
         public ManageServerScenario(Guid serverId, SocketGuild guild, SocketUser user, SocketCategoryChannel category)
             : base(guild, user, category, "manage-server")
@@ -25,6 +28,7 @@ namespace Knock.Scenarios
 
             Models.Add(new ScenarioModel("select-action", SelectManagementAction));
             Models.Add(new ScenarioModel("launch", Launch));
+            Models.Add(new ScenarioModel("stop", Stop));
 
             Models.Add(new ScenarioModel(
                 "select-server-properties-back", async arg => await SwapBackSelectMenuItem(arg, "select-server-properties")));
@@ -71,7 +75,14 @@ namespace Knock.Scenarios
                     $"scenario.{ScenarioId}.launch",
                     ButtonStyle.Success,
                     new Emoji("🏃"),
-                    row: 1);
+                    row: 1)
+                .WithButton(
+                    Locale.Get("button.manage_server.stop"),
+                    $"scenario.{ScenarioId}.stop",
+                    ButtonStyle.Danger,
+                    new Emoji("⏹️"),
+                    row: 2,
+                    disabled: true);
 
             await Scenario.ChangeChannelName(this, Locale.Get("channel_name.manage_server") + container.Name);
 
@@ -98,6 +109,7 @@ namespace Knock.Scenarios
             }
 
             await ToggleMessage("manage", false);
+            await ToggleLaunchAndStop();
         }
 
         private async Task ActionEditServerProperties(SocketMessageComponent component)
@@ -120,11 +132,107 @@ namespace Knock.Scenarios
 
         private async Task Launch(SocketInteraction arg)
         {
+            await arg.DeferAsync();
             await ToggleMessage("manage", true);
             IResult res = await Request.Launch(serverId);
-            await ToggleMessage("manage", false);
 
-            await arg.RespondAsync(res.IsSuccess.ToString());
+            _isLaunched = res.IsSuccess;
+
+            List<Embed> embeds = new List<Embed>();
+            EmbedBuilder resultEmbed = new EmbedBuilder();
+            if (res.IsSuccess)
+            {
+                resultEmbed
+                    .WithTitle(Locale.Get("embed.manage_server.launch.success.title"))
+                    .WithDescription(Locale.Get("embed.manage_server.launch.success.description"))
+                    .WithColor(Color["success"]);
+
+                await Scenario.Register(
+                    new ServerContainerLogOutputThreadScenario(this, Locale.Get("threads.log_output"), serverId));
+            }
+            else
+            {
+                resultEmbed
+                    .WithTitle(Locale.Get("embed.manage_server.launch.failed.title"))
+                    .WithDescription(
+                        string.Format(
+                            Locale.Get("embed.manage_server.launch.failed.description"),
+                            res.Code,
+                            res.Message))
+                    .WithColor(Color["warning"]);
+            }
+
+            embeds.Add(resultEmbed.Build());
+
+            await ToggleMessage("manage", false);
+            await ToggleLaunchAndStop();
+
+            await arg.Channel.SendMessageAsync(embeds: embeds.ToArray());
         }
+
+        private async Task Stop(SocketInteraction arg)
+        {
+            await arg.DeferAsync();
+            await ToggleMessage("manage", true);
+            IResult res = await Request.Stop(serverId);
+
+            _isLaunched = !res.IsSuccess;
+
+            List<Embed> embeds = new List<Embed>();
+            EmbedBuilder resultEmbed = new EmbedBuilder();
+            if (res.IsSuccess)
+            {
+                resultEmbed
+                    .WithTitle(Locale.Get("embed.manage_server.stop.success.title"))
+                    .WithColor(Color["success"]);
+
+                await Scenario.Unregister(Threads["log-output"].ScenarioId);
+                await Threads["log-output"].ThreadChannel.DeleteAsync();
+                (Threads["log-output"] as ServerContainerLogOutputThreadScenario).OnDelete();
+                Threads.Remove("log-output");
+                
+            }
+            else
+            {
+                resultEmbed
+                    .WithTitle(Locale.Get("embed.manage_server.stop.failed.title"))
+                    .WithDescription(
+                        string.Format(
+                            Locale.Get("embed.manage_server.stop.failed.description"),
+                            res.Code,
+                            res.Message))
+                    .WithColor(Color["warning"]);
+            }
+
+            embeds.Add(resultEmbed.Build());
+
+            await ToggleMessage("manage", false);
+            await ToggleLaunchAndStop();
+
+            await arg.Channel.SendMessageAsync(embeds: embeds.ToArray());
+        }
+
+        public override async Task OnCloseButtonClick(SocketInteraction arg)
+        {
+            if (_isLaunched)
+            {
+                EmbedBuilder resultEmbed = new EmbedBuilder()
+                    .CreateLocalized("embed.manage_server.on_close")
+                    .WithColor(Color["warning"]);
+
+                await arg.RespondAsync(embed: resultEmbed.Build(), ephemeral: true);
+
+                return;
+            }
+            Server.Unlock(serverId);
+            await base.OnCloseButtonClick(arg);
+        }
+
+        private async Task ToggleLaunchAndStop()
+        {
+            await ToggleMessagePart("manage", $"scenario.{ScenarioId}.launch", _isLaunched);
+            await ToggleMessagePart("manage", $"scenario.{ScenarioId}.stop", !_isLaunched);
+        }
+        
     }
 }

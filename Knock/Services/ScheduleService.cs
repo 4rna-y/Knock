@@ -23,6 +23,11 @@ namespace Knock.Services
             schedules.Add(schedule);
         }
 
+        public void Unregister(ScheduleBase schedule)
+        {
+            schedules.Remove(schedule);
+        }
+
         public void OnTimerTick(object state)
         {
             Task.Run(ExecuteSchedule);

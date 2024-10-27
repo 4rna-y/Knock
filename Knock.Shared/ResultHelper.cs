@@ -10,14 +10,18 @@ namespace Knock.Shared
     {
         public static IResult FromPacket(byte[] data)
         {
+
             Span<byte> span = new Span<byte>(data);
-            if (BitConverter.ToBoolean(span.Slice(0, 1)))
+
+            bool result = BitConverter.ToBoolean(span[0..1]);
+
+            if (result)
             {
-                return new Ok(BitConverter.ToInt32(span.Slice(1, 2)), Encoding.UTF8.GetString(span.Slice(3)));
+                return new Ok(BitConverter.ToInt32(span[1..5]), Encoding.UTF8.GetString(span[5..]));
             }
             else
             {
-                return new Error(BitConverter.ToInt32(span.Slice(1, 2)), Encoding.UTF8.GetString(span.Slice(3)));
+                return new Error(BitConverter.ToInt32(span[1..5]), Encoding.UTF8.GetString(span[5..]));
             }
         }
     }

@@ -9,7 +9,7 @@ namespace Knock.Shared
 {
     public class Ok : IResult
     {
-        public bool IsSuccess { get; set; }
+        public bool IsSuccess { get; set; } = true;
         public int Code { get; set; }
         public string Message { get; set; }
 
@@ -28,7 +28,7 @@ namespace Knock.Shared
             Message = message;
         }
 
-        public byte[] GetRawMessage() => Encoding.UTF8.GetBytes(Message);
+        public byte[] GetRawMessage() => Message is null ? new byte[0] : Encoding.UTF8.GetBytes(Message);
 
         public byte[] ToPacket()
         {

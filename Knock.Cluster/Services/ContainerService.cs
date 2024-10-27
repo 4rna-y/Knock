@@ -148,12 +148,22 @@ namespace Knock.Cluster.Services
 
         public async Task<IResult> Launch(Guid id)
         {
-            LaunchInfo info = 
+            LaunchInfo info =
                 await json.LoadFile<LaunchInfo>(
-                    new DirectoryInfo(Path.Combine(containerDir.FullName, id.ToString())), 
+                    new DirectoryInfo(Path.Combine(containerDir.FullName, id.ToString())),
                     "launchinfo.json");
 
             return await process.Run(id, info, this);
+        }
+
+        public async Task<IResult> Stop(Guid id)
+        {
+            return await process.Stop(id);
+        }
+
+        public async Task<string> GetLog(Guid id)
+        {
+            return await process.GetLog(id);
         }
     }
 }

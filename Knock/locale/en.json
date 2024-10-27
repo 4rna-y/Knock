@@ -136,6 +136,45 @@
           "description": "Key : **{0}**\nValue : **{1}**"
         }
 
+      },
+
+      "manage_owner": {
+        "select_operation": {
+          "title": "👷  Select operation"
+        },
+        "select_add_user": {
+          "title": "🫵  Select users to add"
+        },
+        "select_remove_user": {
+          "title": "🫵  Select users to remove"
+        },
+        "operation_done": {
+          "title": "✅  Operation completed successfully"
+        }
+      },
+
+      "launch": {
+        "success": {
+          "title": "✅  Your container has started.",
+          "description": "You can check the server log from the thread."
+        },
+        "failed": {
+          "title": "🚭  Failed to launch your container.",
+          "description": "returned code : {0}\nmessage : {1}"
+        }
+      },
+      "stop": {
+        "success": {
+          "title": "✅  Your container has stoped."
+        },
+        "failed": {
+          "title": "🚭  Failed to stop your container.",
+          "description": "returned code : {0}\nmessage : {1}"
+        }
+      },
+      "on_close": {
+        "title": "🔒  Couldnt close",
+        "description": "The server container must be stopped before closing the channel."
       }
     },
 
@@ -202,7 +241,8 @@
     },
 
     "manage_server": {
-      "launch": "Launch server"
+      "launch": "Launch",
+      "stop": "Stop"
     }
   },
 
@@ -266,6 +306,26 @@
     "select_container": {
       "label": "Select server container...",
       "description": "Version: {0}, Last access: {1}"
+    },
+
+    "manage_owner": {
+      "label": "Select operation...",
+      "options": {
+        "add": {
+          "title": "Add co-owner",
+          "description": "As a co-owner, you will be granted authority, including in-game.",
+          "icon": "🧑‍💻"
+        },
+        "remove": {
+          "title": "Remove co-owner",
+          "description": "The privileges granted to you as a co-owner, including in-game, are revoked.",
+          "icon": "🧯"
+        }
+      }
+    },
+
+    "select_user": {
+      "label": "Select users..."
     }
   },
 
@@ -276,7 +336,8 @@
   },
 
   "threads": {
-    "edit_server_properties": "Editing server setting"
+    "edit_server_properties": "Editing server setting",
+    "log_output": "Log"
   },
 
   "error": {

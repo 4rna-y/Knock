@@ -21,7 +21,7 @@ namespace Knock.Cluster.Services
         //1: os
         //2: arch
         private readonly string jrePath = 
-            "https://api.adoptium.net/v3/binary/latest/{0}/ea/{1}/{2}/jre/hotspot/normal/eclipse";
+            "https://api.adoptium.net/v3/binary/latest/{0}/ga/{1}/{2}/jdk/hotspot/normal/eclipse";
         private readonly int[] jreVersions = new int[]
         {
             11, 16, 17, 21
@@ -62,7 +62,7 @@ namespace Knock.Cluster.Services
             {
                 if (!installed[i])
                 {
-                    logger.Info($"Downloading jre {jreVersions[i]}...");
+                    logger.Info($"Downloading jdk {jreVersions[i]}...");
                     DirectoryInfo target = dir.CreateSubdirectory(jreVersions[i].ToString());
                     string reqPath = string.Format(jrePath, jreVersions[i], os, arch.ToString().ToLower());
                     string zipPath = await http.Download(reqPath, target, $"{jreVersions[i]}.zip");
@@ -89,6 +89,7 @@ namespace Knock.Cluster.Services
                 RedirectStandardInput = true,
                 WorkingDirectory = dir.FullName,
             };
+            process.EnableRaisingEvents = true;
             process.StartInfo = processInfo;
             return process;
         }
@@ -121,10 +122,16 @@ namespace Knock.Cluster.Services
             }
             else if (minor >= 20)               vDir = dir.GetDirectories().FirstOrDefault(x => x.Name == "21");
 
+            string ext = "";
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                ext = ".exe";
+            }
+
             FileInfo bin = 
                 vDir.GetDirectories()[0]
                     .GetDirectories().FirstOrDefault(x => x.Name == "bin")
-                    .GetFiles().FirstOrDefault(x => x.Name.StartsWith("java"));
+                    .GetFiles().FirstOrDefault(x => x.Name.StartsWith($"java{ext}"));
             return bin.FullName;
         }
     }

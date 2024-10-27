@@ -54,12 +54,7 @@ namespace Knock.Services
 
             registeredChannels.Add(channelScenario.ScenarioId, t);
 
-            ComponentBuilder builder = new ComponentBuilder()
-                .WithButton(
-                    locale.Get("button.close_scenario"),
-                    $"scenario.{channelScenario.ScenarioId}.close-scenario",
-                    ButtonStyle.Secondary,
-                    new Emoji("👋"));
+            ComponentBuilder builder = channelScenario.BuildTopComponent(new ComponentBuilder());
 
             IMessage msg = await t.SendMessageAsync($"{channelScenario.User.Mention}", components: builder.Build());
             channelScenario.MentionMessageId = msg.Id;
@@ -76,7 +71,7 @@ namespace Knock.Services
                     ThreadArchiveDuration.OneHour);
 
             await thread.AddUserAsync(threadScenario.Guild.Users.FirstOrDefault(x => x.Id.Equals(threadScenario.User.Id)));
-            threadScenario.ChannelScenario.Threads.Add(threadScenario.Key, thread.Id);
+            threadScenario.ChannelScenario.Threads.Add(threadScenario.Key, threadScenario);
             return thread;
         }
 

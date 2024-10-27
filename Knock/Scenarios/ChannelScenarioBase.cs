@@ -24,7 +24,7 @@ namespace Knock.Scenarios
         protected Dictionary<string, ulong> MessageIds { get; }
         protected Dictionary<string, ulong> ComponentMessageIds { get; }
         protected Dictionary<string, MultiPageableSelectMenu> MultiPageableSelectMenus { get; }
-        public Dictionary<string, ulong> Threads { get; }
+        public Dictionary<string, ThreadScenarioBase> Threads { get; }
 
         public ChannelScenarioBase(SocketGuild guild, SocketUser user, SocketCategoryChannel category, string name) :
             base(guild, user)
@@ -34,7 +34,7 @@ namespace Knock.Scenarios
             MessageIds = new Dictionary<string, ulong>();
             ComponentMessageIds = new Dictionary<string, ulong>();
             MultiPageableSelectMenus = new Dictionary<string, MultiPageableSelectMenu>();
-            Threads = new Dictionary<string, ulong>();
+            Threads = new Dictionary<string, ThreadScenarioBase>();
         }
 
         protected void Add(string key, ulong value)
@@ -63,6 +63,65 @@ namespace Knock.Scenarios
             if (ComponentMessageIds.ContainsKey(key))
             {
                 ComponentMessageIds.Remove(key);
+            }
+        }
+
+        protected async Task ToggleMessagePart(string key, string customId, bool toggle)
+        {
+            if (ComponentMessageIds.ContainsKey(key))
+            {
+                RestMessage msg = await TextChannel.GetMessageAsync(ComponentMessageIds[key]);
+                List<ActionRowComponent> rows = msg.Components.ToList();
+                ComponentBuilder builder = new ComponentBuilder();
+
+                foreach (ActionRowComponent row in rows)
+                {
+                    ActionRowBuilder rowBuilder = new ActionRowBuilder();
+                    List<IMessageComponent> comps = row.Components.ToList();
+                    foreach (IMessageComponent comp in comps)
+                    {
+                        if (comp is ButtonComponent button)
+                        {
+                            rowBuilder.WithButton(
+                                button.Label,
+                                button.CustomId,
+                                button.Style,
+                                button.Emote,
+                                button.Url,
+                                customId == button.CustomId ? toggle : button.IsDisabled);
+                        }
+                        else
+                        if (comp is SelectMenuComponent menu)
+                        {
+                            List<SelectMenuOptionBuilder> optionBuilders = new List<SelectMenuOptionBuilder>();
+                            foreach (SelectMenuOption option in menu.Options)
+                            {
+                                SelectMenuOptionBuilder optionBuilder = new SelectMenuOptionBuilder()
+                                    .WithLabel(option.Label)
+                                    .WithValue(option.Value)
+                                    .WithDescription(option.Description)
+                                    .WithEmote(option.Emote)
+                                    .WithDefault(option.IsDefault.GetValueOrDefault());
+                                optionBuilders.Add(optionBuilder);
+                            }
+                            rowBuilder.WithSelectMenu(
+                                menu.CustomId,
+                                optionBuilders,
+                                menu.Placeholder,
+                                menu.MinValues,
+                                menu.MaxValues,
+                                customId == menu.CustomId ? toggle : menu.IsDisabled,
+                                menu.Type,
+                                menu.ChannelTypes.ToArray());
+                        }
+                    }
+                    builder.AddRow(rowBuilder);
+                }
+
+                await TextChannel.ModifyMessageAsync(ComponentMessageIds[key], x =>
+                {
+                    x.Components = builder.Build();
+                });
             }
         }
 
@@ -265,6 +324,21 @@ namespace Knock.Scenarios
             }
         }
 
+        public virtual ComponentBuilder BuildTopComponent(ComponentBuilder builder)
+        {
+            return builder.WithButton(
+                    Locale.Get("button.close_scenario"),
+                    $"scenario.{ScenarioId}.close-scenario",
+                    ButtonStyle.Secondary,
+                    new Emoji("👋"));
+        }
+
+        public virtual async Task OnCloseButtonClick(SocketInteraction arg)
+        {
+            await Scenario.Unregister(ScenarioId);
+            await arg.DeferAsync();
+        }
+
         public override async Task SetUp()
         {
             TextChannel = await Scenario.CreateChannel(this);
@@ -276,8 +350,7 @@ namespace Knock.Scenarios
         {
             if (key == "close-scenario")
             {
-                await Scenario.Unregister(ScenarioId);
-                await arg.DeferAsync();
+                await OnCloseButtonClick(arg);
             }
             else
             {

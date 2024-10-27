@@ -30,6 +30,8 @@ namespace Knock.Cluster.Services
             RequestTypes.SetServerPropertyValue => await ResponseSetServerPropertyValue(request),
             RequestTypes.GetServerPropertyValue => await ResponseGetServerPropertyValue(request),
             RequestTypes.Launch => await ResponseLaunch(request),
+            RequestTypes.Stop => await ResponseStop(request),
+            RequestTypes.Log => await ResponseLog(request),
             _ => null
         };
 
@@ -143,6 +145,44 @@ namespace Knock.Cluster.Services
                 .WithRequestType(RequestTypes.Launch)
                 .WithGuid(packet.Guid)
                 .WithData(res.ToPacket())
+                .Build();
+
+            return dest;
+        }
+
+        private async Task<DataPacket> ResponseStop(DataPacket packet)
+        {
+            logger.Info("Response Stop");
+
+            Guid guid = packet.GetGuidData(0);
+
+            IResult res = await container.Stop(guid);
+
+            DataPacket dest = new DataPacket.Builder()
+                .WithPacketType(PacketTypes.Response)
+                .WithDataType(DataTypes.Plain)
+                .WithRequestType(RequestTypes.Stop)
+                .WithGuid(packet.Guid)
+                .WithData(res.ToPacket())
+                .Build();
+
+            return dest;
+        }
+
+        private async Task<DataPacket> ResponseLog(DataPacket packet)
+        {
+            logger.Info("Response Log");
+
+            Guid guid = packet.GetGuidData(0);
+
+            string log = await container.GetLog(guid);
+
+            DataPacket dest = new DataPacket.Builder()
+                .WithPacketType(PacketTypes.Response)
+                .WithDataType(DataTypes.Plain)
+                .WithRequestType(RequestTypes.Stop)
+                .WithGuid(packet.Guid)
+                .WithData(Encoding.UTF8.GetBytes(log))
                 .Build();
 
             return dest;
