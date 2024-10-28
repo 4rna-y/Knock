@@ -72,7 +72,8 @@ namespace Knock.Scenarios
 
             registeredIds.RemoveAll(container.Owners.Contains);
 
-            ComponentBuilder component = new ComponentBuilder();
+            ComponentBuilder component = new ComponentBuilder()
+                ;
         }
     }
 }
