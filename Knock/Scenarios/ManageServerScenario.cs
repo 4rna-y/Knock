@@ -7,6 +7,7 @@ using Knock.Shared;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -66,7 +67,12 @@ namespace Knock.Scenarios
                     .WithLabel(Locale.Get("selectmenu.manage_server_actions.options.edit_server_properties.title"))
                     .WithDescription(Locale.Get("selectmenu.manage_server_actions.options.edit_server_properties.description"))
                     .WithEmote(new Emoji(Locale.Get("selectmenu.manage_server_actions.options.edit_server_properties.icon")))
-                    .WithValue("server-properties"));
+                    .WithValue("server-properties"))
+                .AddOption(new SelectMenuOptionBuilder()
+                    .WithLabel(Locale.Get("selectmenu.manage_server_actions.options.manage_owner.title"))
+                    .WithDescription(Locale.Get("selectmenu.manage_server_actions.options.manage_owner.description"))
+                    .WithEmote(new Emoji(Locale.Get("selectmenu.manage_server_actions.options.manage_owner.icon")))
+                    .WithValue("manage-owner"));
 
             ComponentBuilder componentBuilder = new ComponentBuilder()
                 .WithSelectMenu(menuBuilder)
@@ -107,6 +113,8 @@ namespace Knock.Scenarios
             {
                 await ActionEditServerProperties(component);
             }
+            else
+            if (text.Equals("manage-owner")) await ActionManageOwner(component);
 
             await ToggleMessage("manage", false);
             await ToggleLaunchAndStop();
@@ -128,6 +136,24 @@ namespace Knock.Scenarios
                 new EditServerPropertiesThreadScenario(this, Locale.Get("threads.edit_server_properties"), serverId));
 
             await component.DeferAsync();
+        }
+
+        private async Task ActionManageOwner(SocketMessageComponent componentArg)
+        {
+            if (Threads.ContainsKey("manage-owner"))
+            {
+                EmbedBuilder alreadyEmbedBuilder = new EmbedBuilder()
+                    .WithTitle(Locale.Get("embed.manage_server.already_created_thread.title"))
+                    .WithColor(Color["error"]);
+
+                await componentArg.RespondAsync(embed: alreadyEmbedBuilder.Build(), ephemeral: true);
+                return;
+            }
+
+            ManageOwnerThreadScenario scenario = await Scenario.Register(
+                new ManageOwnerThreadScenario(this, Locale.Get("threads.manage_owner"), serverId));
+
+            await componentArg.DeferAsync();
         }
 
         private async Task Launch(SocketInteraction arg)

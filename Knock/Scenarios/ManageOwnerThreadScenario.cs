@@ -58,10 +58,7 @@ namespace Knock.Scenarios
             
             string key = string.Join(", ", componentArg.Data.Values);
 
-            if (key == "add")
-            {
-
-            }
+            if (key == "add") await SelectAdd(arg);
         }
 
         private async Task SelectAdd(SocketInteraction arg)
@@ -70,10 +67,26 @@ namespace Knock.Scenarios
             MinecraftAccounts accs = Data.Get<MinecraftAccounts>("mcinfo");
             List<ulong> registeredIds = accs.Accounts.Select(x => x.DiscordId).ToList();
 
-            registeredIds.RemoveAll(container.Owners.Contains);
+            //registeredIds.RemoveAll(container.Owners.Contains);
+
+            EmbedBuilder embed = new EmbedBuilder()
+                .CreateLocalized("embed.manage_server.manage_owner.select_add_user")
+                .WithColor(Color["question"]);
+
+            SelectMenuBuilder menuBuilder = new SelectMenuBuilder()
+                .WithCustomId($"scenario.{ScenarioId}.select-user")
+                .WithPlaceholder(Locale.Get("selectmenu.select_user.label"));
+
+            foreach (ulong id in registeredIds)
+            {
+                SocketGuildUser user = this.Guild.GetUser(id);
+                menuBuilder.AddOption(new SelectMenuOptionBuilder(user.DisplayName, id.ToString()));
+            }
 
             ComponentBuilder component = new ComponentBuilder()
-                ;
+                .WithSelectMenu(menuBuilder);
+
+            await arg.RespondAsync(embed: embed.Build(), components: component.Build());
         }
     }
 }

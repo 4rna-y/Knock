@@ -294,6 +294,11 @@
           "title": "Edit server settings",
           "description": "Configure server.properties to change server configuration",
           "icon": "📝"
+        },
+        "manage_owner": {
+          "title": "Manage co-owners",
+          "description": "Manage co-ownership privileges for server containers, including in-game privileges.",
+          "icon": "🧑‍💻"
         }
       }
     },
@@ -337,6 +342,7 @@
 
   "threads": {
     "edit_server_properties": "Editing server setting",
+    "manage_owner": "Manage co-owners",
     "log_output": "Log"
   },
 
