@@ -148,6 +148,9 @@
         "select_remove_user": {
           "title": "🫵  Select users to remove"
         },
+        "select_no_owner": {
+          "title": "There is no co-owner you can manage"
+        },
         "operation_done": {
           "title": "✅  Operation completed successfully"
         }

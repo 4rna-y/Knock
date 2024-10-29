@@ -59,6 +59,8 @@ namespace Knock.Scenarios
             string key = string.Join(", ", componentArg.Data.Values);
 
             if (key == "add") await SelectAdd(arg);
+            else
+            if (key == "remove") await SelectRemove(arg);
         }
 
         private async Task SelectAdd(SocketInteraction arg)
@@ -67,15 +69,66 @@ namespace Knock.Scenarios
             MinecraftAccounts accs = Data.Get<MinecraftAccounts>("mcinfo");
             List<ulong> registeredIds = accs.Accounts.Select(x => x.DiscordId).ToList();
 
-            //registeredIds.RemoveAll(container.Owners.Contains);
+            registeredIds.RemoveAll(container.Owners.Contains);
+            if (registeredIds.Count == 0)
+            {
+                EmbedBuilder noOwner = new EmbedBuilder()
+                    .CreateLocalized("embed.manage_server.manage_owner.select_no_owner")
+                    .WithColor(Color["warning"]);
+
+                await arg.RespondAsync(embed: noOwner.Build(), ephemeral: true);
+                await ToggleMessage("select_operation", false);
+                return;
+            }
 
             EmbedBuilder embed = new EmbedBuilder()
                 .CreateLocalized("embed.manage_server.manage_owner.select_add_user")
                 .WithColor(Color["question"]);
 
             SelectMenuBuilder menuBuilder = new SelectMenuBuilder()
-                .WithCustomId($"scenario.{ScenarioId}.select-user")
-                .WithPlaceholder(Locale.Get("selectmenu.select_user.label"));
+                .WithCustomId($"scenario.{ScenarioId}.select-add-user")
+                .WithPlaceholder(Locale.Get("selectmenu.select_user.label"))
+                .WithMinValues(1)
+                .WithMaxValues(10);
+
+            foreach (ulong id in registeredIds)
+            {
+                SocketGuildUser user = this.Guild.GetUser(id);
+                menuBuilder.AddOption(new SelectMenuOptionBuilder(user.DisplayName, id.ToString()));
+            }
+
+            ComponentBuilder component = new ComponentBuilder()
+                .WithSelectMenu(menuBuilder);
+
+            await arg.RespondAsync(embed: embed.Build(), components: component.Build());
+        }
+
+        private async Task SelectRemove(SocketInteraction arg)
+        {
+            ServerContainer container = Server.GetContainer(containerId);
+
+            List<ulong> registeredIds = container.Owners.ToList();
+            registeredIds.Remove(arg.User.Id);
+            if (registeredIds.Count == 0)
+            {
+                EmbedBuilder noOwner = new EmbedBuilder()
+                    .CreateLocalized("embed.manage_server.manage_owner.select_no_owner")
+                    .WithColor(Color["warning"]);
+
+                await arg.RespondAsync(embed: noOwner.Build(), ephemeral: true);
+                await ToggleMessage("select_operation", false);
+                return;
+            }
+
+            EmbedBuilder embed = new EmbedBuilder()
+                .CreateLocalized("embed.manage_server.manage_owner.select_remove_user")
+                .WithColor(Color["question"]);
+
+            SelectMenuBuilder menuBuilder = new SelectMenuBuilder()
+                .WithCustomId($"scenario.{ScenarioId}.select-remove-user")
+                .WithPlaceholder(Locale.Get("selectmenu.select_user.label"))
+                .WithMinValues(1)
+                .WithMaxValues(10);
 
             foreach (ulong id in registeredIds)
             {
