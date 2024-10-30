@@ -20,6 +20,9 @@ namespace Knock.Scenarios
             this.containerId = containerId;
 
             Models.Add(new ScenarioModel("select-operation", SelectOperation));
+            Models.Add(new ScenarioModel("select-add-user", SelectAddUser));
+            Models.Add(new ScenarioModel("select-remove-user", SelectRemoveUser));
+            Models.Add(new ScenarioModel("close", Close));
         }
 
         public override async Task Start()
@@ -89,7 +92,7 @@ namespace Knock.Scenarios
                 .WithCustomId($"scenario.{ScenarioId}.select-add-user")
                 .WithPlaceholder(Locale.Get("selectmenu.select_user.label"))
                 .WithMinValues(1)
-                .WithMaxValues(10);
+                .WithMaxValues(registeredIds.Count);
 
             foreach (ulong id in registeredIds)
             {
@@ -128,7 +131,7 @@ namespace Knock.Scenarios
                 .WithCustomId($"scenario.{ScenarioId}.select-remove-user")
                 .WithPlaceholder(Locale.Get("selectmenu.select_user.label"))
                 .WithMinValues(1)
-                .WithMaxValues(10);
+                .WithMaxValues(registeredIds.Count);
 
             foreach (ulong id in registeredIds)
             {
@@ -140,6 +143,55 @@ namespace Knock.Scenarios
                 .WithSelectMenu(menuBuilder);
 
             await arg.RespondAsync(embed: embed.Build(), components: component.Build());
+            IMessage msg = await arg.GetOriginalResponseAsync();
+            MessageIds.Add("select-user", msg.Id);
+            ComponentMessageIds.Add("select-user", msg.Id);
         }
+
+        private Task SelectAddUser(SocketInteraction arg) => SelectUser(arg, "add");
+
+        private Task SelectRemoveUser(SocketInteraction arg) => SelectUser(arg, "remove");
+
+        private async Task SelectUser(SocketInteraction arg, string operation)
+        {
+            SocketMessageComponent componentArg = arg as SocketMessageComponent;
+
+            await ToggleMessage("select-user", true);
+
+            string key = string.Join(", ", componentArg.Data.Values);
+
+            if (operation == "add")
+            {
+                Server.UpdateContainer(containerId, x =>
+                {
+                    ulong uId = ulong.Parse(key);
+                    x.Owners.Add(uId);
+                    return x;
+                });
+            }
+
+            if (operation == "remove")
+            {
+                Server.UpdateContainer(containerId, x =>
+                {
+                    ulong uId = ulong.Parse(key);
+                    x.Owners.Remove(uId);
+                    return x;
+                });
+            }
+
+            EmbedBuilder resultEmbed = new EmbedBuilder()
+                .CreateLocalized("embed.manage_server.manage_owner.operation_done")
+                .WithColor(Color["success"]);
+
+            ComponentBuilder component = new ComponentBuilder()
+                .WithButton(
+                    Locale.Get("button.close_scenario"),
+                    $"scenario.{ScenarioId}.close");
+
+            await componentArg.RespondAsync(embed: resultEmbed.Build(), components: component.Build());
+        }
+
+
     }
 }

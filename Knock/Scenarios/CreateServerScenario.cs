@@ -189,6 +189,9 @@ namespace Knock.Scenarios
                 return x;
             });
 
+            await RemoveMessage("register-account-found");
+            await arg.DeferAsync();
+
             await StartServerSetUp(null);
         }
         #endregion

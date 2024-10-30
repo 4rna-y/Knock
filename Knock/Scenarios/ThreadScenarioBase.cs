@@ -32,6 +32,13 @@ namespace Knock.Scenarios
             Key = key;
         }
 
+        protected async Task Close(SocketInteraction arg)
+        {
+            await arg.DeferAsync();
+            await Scenario.Unregister(ScenarioId);
+            await ThreadChannel.DeleteAsync();
+        }
+
         protected async Task RemoveMessage(string key)
         {
             if (MessageIds.ContainsKey(key))

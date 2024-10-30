@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Knock.Cluster.Services
@@ -164,6 +165,28 @@ namespace Knock.Cluster.Services
         public async Task<string> GetLog(Guid id)
         {
             return await process.GetLog(id);
+        }
+
+        public Task<IResult> GetOpedIds(Guid id)
+        {
+            string path = Path.Combine(containerDir.FullName, id.ToString(), "ops.json");
+            Ops ops = JsonSerializer.Deserialize<Ops>(File.ReadAllText(path));
+            List<Guid> ids = ops.Select(x => x.Id).ToList();
+            return Task.FromResult(new Ok(0, string.Join(",", ids)) as IResult);
+        }
+
+        public async Task SetOpedIds(Guid id, List<Guid> uuids)
+        {
+            string path = Path.Combine(containerDir.FullName, id.ToString(), "ops.json");
+            Ops ops = JsonSerializer.Deserialize<Ops>(File.ReadAllText(path));
+
+            foreach (Guid uuid in uuids)
+            {
+                if (!ops.Any(x => x.Id == uuid))
+                {
+                    
+                }
+            }
         }
     }
 }

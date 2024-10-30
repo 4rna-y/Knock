@@ -277,12 +277,6 @@ namespace Knock.Scenarios
             await arg.RespondWithModalAsync(modalBuilder.Build());
         }
 
-        private async Task Close(SocketInteraction arg)
-        {
-            await Scenario.Unregister(ScenarioId);
-            await ThreadChannel.DeleteAsync();
-        }
-
         private async Task Continue(SocketInteraction arg)
         {
             await RemoveMessage("success");

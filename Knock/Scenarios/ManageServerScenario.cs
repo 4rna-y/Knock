@@ -42,6 +42,12 @@ namespace Knock.Scenarios
             ServerContainer container = Server.GetContainer(serverId);
             Server.Lock(serverId);
 
+            foreach (ulong ownerId in container.Owners)
+            {
+                await TextChannel.AddPermissionOverwriteAsync(
+                    Guild.GetUser(ownerId), OverwritePermissions.AllowAll(TextChannel));
+            }
+
             EmbedBuilder embedBuilder = new EmbedBuilder()
                 .WithTitle(string.Format(Locale.Get("embed.manage_server.manage_top.title"), container.Name))
                 .WithColor(Color["warning"])

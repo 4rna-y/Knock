@@ -45,6 +45,17 @@ namespace Knock.Services
             return data.Get<ServerContainers>("containers").Containers.FirstOrDefault(x => x.Id.Equals(id));
         }
 
+        public void UpdateContainer(Guid id, Func<ServerContainer, ServerContainer> predicate)
+        {
+            ServerContainer container = predicate(GetContainer(id));
+            data.Set<ServerContainers>("containers", x =>
+            {
+                int idx = x.Containers.FindIndex(y => y.Id == id);
+                x.Containers[idx] = container;
+                return x;
+            });
+        }
+
         public IEnumerable<ServerContainer> GetContainers(
             ulong userId, IEnumerable<string> connections)
         {
