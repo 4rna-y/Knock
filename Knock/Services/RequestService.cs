@@ -273,13 +273,14 @@ namespace Knock.Services
             webSocket.ResponseAwaitable.TryAdd(id, new TaskCompletionSource<byte[]>());
             webSocket.ResponseAwaitable.TryGetValue(id, out TaskCompletionSource<byte[]> task);
             byte[] res = await task.Task;
-            string joinedIds = Encoding.UTF8.GetString(res);
 
+            IResult result = ResultHelper.FromPacket(res);
+            string joinedIds = result.Message;
             List<string> ids = joinedIds.Split(",").ToList();
             return ids.Select(Guid.Parse).ToList();
         }
 
-        public async Task<List<Guid>> AddOpedIds(Guid containerId, List<Guid> uuids)
+        public async Task<IResult> AddOpedIds(Guid containerId, List<Guid> uuids)
         {
             ServerContainer container =
                data.Get<ServerContainers>("containers").Containers.FirstOrDefault(x => x.Id.Equals(containerId));
@@ -287,11 +288,11 @@ namespace Knock.Services
                 this.GetConnections().FirstOrDefault(
                     x => container.StoredLocation.Equals($"{x.ConnectionInfo.ClientIpAddress}:{x.ConnectionInfo.ClientPort}"));
 
-            uuids.Select(x => x.ToByteArray()).ToList()
+            List<byte> uuidsPlaned = uuids.SelectMany(x => x.ToByteArray()).ToList();
 
-            List<byte> dest = new List<byte>() { { 0 } };
+            List<byte> dest = new List<byte>() { { 1 } };
             dest.AddRange(container.Id.ToByteArray());
-            dest.AddRange();
+            dest.AddRange(uuidsPlaned);
 
             Guid id = Guid.NewGuid();
             DataPacket packet = new DataPacket.Builder()
@@ -308,10 +309,140 @@ namespace Knock.Services
             webSocket.ResponseAwaitable.TryAdd(id, new TaskCompletionSource<byte[]>());
             webSocket.ResponseAwaitable.TryGetValue(id, out TaskCompletionSource<byte[]> task);
             byte[] res = await task.Task;
-            string joinedIds = Encoding.UTF8.GetString(res);
 
+            return ResultHelper.FromPacket(res);
+        }
+
+        public async Task<IResult> RemoveOpedIds(Guid containerId, List<Guid> uuids)
+        {
+            ServerContainer container =
+               data.Get<ServerContainers>("containers").Containers.FirstOrDefault(x => x.Id.Equals(containerId));
+            IWebSocketConnection connection =
+                this.GetConnections().FirstOrDefault(
+                    x => container.StoredLocation.Equals($"{x.ConnectionInfo.ClientIpAddress}:{x.ConnectionInfo.ClientPort}"));
+
+            List<byte> uuidsPlaned = uuids.SelectMany(x => x.ToByteArray()).ToList();
+
+            List<byte> dest = new List<byte>() { { 2 } };
+            dest.AddRange(container.Id.ToByteArray());
+            dest.AddRange(uuidsPlaned);
+
+            Guid id = Guid.NewGuid();
+            DataPacket packet = new DataPacket.Builder()
+                .WithPacketType(PacketTypes.Request)
+                .WithDataType(DataTypes.Plain)
+                .WithRequestType(RequestTypes.Ops)
+                .WithGuid(id)
+                .WithData(dest.ToArray())
+                .Build();
+
+            byte[] req = webSocket.GetEncryptedData(packet);
+
+            await connection.Send(req);
+            webSocket.ResponseAwaitable.TryAdd(id, new TaskCompletionSource<byte[]>());
+            webSocket.ResponseAwaitable.TryGetValue(id, out TaskCompletionSource<byte[]> task);
+            byte[] res = await task.Task;
+
+            return ResultHelper.FromPacket(res);
+        }
+
+        public async Task<List<Guid>> GetWhitelistedIds(Guid containerId)
+        {
+            ServerContainer container =
+               data.Get<ServerContainers>("containers").Containers.FirstOrDefault(x => x.Id.Equals(containerId));
+            IWebSocketConnection connection =
+                this.GetConnections().FirstOrDefault(
+                    x => container.StoredLocation.Equals($"{x.ConnectionInfo.ClientIpAddress}:{x.ConnectionInfo.ClientPort}"));
+
+            List<byte> dest = new List<byte>() { { 0 } };
+            dest.AddRange(container.Id.ToByteArray());
+
+            Guid id = Guid.NewGuid();
+            DataPacket packet = new DataPacket.Builder()
+                .WithPacketType(PacketTypes.Request)
+                .WithDataType(DataTypes.Plain)
+                .WithRequestType(RequestTypes.Whitelist)
+                .WithGuid(id)
+                .WithData(dest.ToArray())
+                .Build();
+
+            byte[] req = webSocket.GetEncryptedData(packet);
+
+            await connection.Send(req);
+            webSocket.ResponseAwaitable.TryAdd(id, new TaskCompletionSource<byte[]>());
+            webSocket.ResponseAwaitable.TryGetValue(id, out TaskCompletionSource<byte[]> task);
+            byte[] res = await task.Task;
+
+            IResult result = ResultHelper.FromPacket(res);
+            string joinedIds = result.Message;
             List<string> ids = joinedIds.Split(",").ToList();
             return ids.Select(Guid.Parse).ToList();
+        }
+
+        public async Task<IResult> AddWhitelistedIds(Guid containerId, List<Guid> uuids)
+        {
+            ServerContainer container =
+               data.Get<ServerContainers>("containers").Containers.FirstOrDefault(x => x.Id.Equals(containerId));
+            IWebSocketConnection connection =
+                this.GetConnections().FirstOrDefault(
+                    x => container.StoredLocation.Equals($"{x.ConnectionInfo.ClientIpAddress}:{x.ConnectionInfo.ClientPort}"));
+
+            List<byte> uuidsPlaned = uuids.SelectMany(x => x.ToByteArray()).ToList();
+
+            List<byte> dest = new List<byte>() { { 1 } };
+            dest.AddRange(container.Id.ToByteArray());
+            dest.AddRange(uuidsPlaned);
+
+            Guid id = Guid.NewGuid();
+            DataPacket packet = new DataPacket.Builder()
+                .WithPacketType(PacketTypes.Request)
+                .WithDataType(DataTypes.Plain)
+                .WithRequestType(RequestTypes.Whitelist)
+                .WithGuid(id)
+                .WithData(dest.ToArray())
+                .Build();
+
+            byte[] req = webSocket.GetEncryptedData(packet);
+
+            await connection.Send(req);
+            webSocket.ResponseAwaitable.TryAdd(id, new TaskCompletionSource<byte[]>());
+            webSocket.ResponseAwaitable.TryGetValue(id, out TaskCompletionSource<byte[]> task);
+            byte[] res = await task.Task;
+
+            return ResultHelper.FromPacket(res);
+        }
+
+        public async Task<IResult> RemoveWhitelistedIds(Guid containerId, List<Guid> uuids)
+        {
+            ServerContainer container =
+               data.Get<ServerContainers>("containers").Containers.FirstOrDefault(x => x.Id.Equals(containerId));
+            IWebSocketConnection connection =
+                this.GetConnections().FirstOrDefault(
+                    x => container.StoredLocation.Equals($"{x.ConnectionInfo.ClientIpAddress}:{x.ConnectionInfo.ClientPort}"));
+
+            List<byte> uuidsPlaned = uuids.SelectMany(x => x.ToByteArray()).ToList();
+
+            List<byte> dest = new List<byte>() { { 2 } };
+            dest.AddRange(container.Id.ToByteArray());
+            dest.AddRange(uuidsPlaned);
+
+            Guid id = Guid.NewGuid();
+            DataPacket packet = new DataPacket.Builder()
+                .WithPacketType(PacketTypes.Request)
+                .WithDataType(DataTypes.Plain)
+                .WithRequestType(RequestTypes.Whitelist)
+                .WithGuid(id)
+                .WithData(dest.ToArray())
+                .Build();
+
+            byte[] req = webSocket.GetEncryptedData(packet);
+
+            await connection.Send(req);
+            webSocket.ResponseAwaitable.TryAdd(id, new TaskCompletionSource<byte[]>());
+            webSocket.ResponseAwaitable.TryGetValue(id, out TaskCompletionSource<byte[]> task);
+            byte[] res = await task.Task;
+
+            return ResultHelper.FromPacket(res);
         }
     }
 }

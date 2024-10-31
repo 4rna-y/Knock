@@ -75,6 +75,11 @@ namespace Knock.Scenarios
                     .WithEmote(new Emoji(Locale.Get("selectmenu.manage_server_actions.options.edit_server_properties.icon")))
                     .WithValue("server-properties"))
                 .AddOption(new SelectMenuOptionBuilder()
+                    .WithLabel(Locale.Get("selectmenu.manage_server_actions.options.manage_whitelist.title"))
+                    .WithDescription(Locale.Get("selectmenu.manage_server_actions.options.manage_whitelist.description"))
+                    .WithEmote(new Emoji(Locale.Get("selectmenu.manage_server_actions.options.manage_whitelist.icon")))
+                    .WithValue("manage-whitelist"))
+                .AddOption(new SelectMenuOptionBuilder()
                     .WithLabel(Locale.Get("selectmenu.manage_server_actions.options.manage_owner.title"))
                     .WithDescription(Locale.Get("selectmenu.manage_server_actions.options.manage_owner.description"))
                     .WithEmote(new Emoji(Locale.Get("selectmenu.manage_server_actions.options.manage_owner.icon")))
@@ -115,12 +120,11 @@ namespace Knock.Scenarios
 
             string text = string.Join(", ", component.Data.Values);
 
-            if (text.Equals("server-properties"))
-            {
-                await ActionEditServerProperties(component);
-            }
+            if (text.Equals("server-properties")) await ActionEditServerProperties(component);
             else
             if (text.Equals("manage-owner")) await ActionManageOwner(component);
+            else
+            if (text.Equals("manage-whitelist")) await ActionManageWhitelist(component);
 
             await ToggleMessage("manage", false);
             await ToggleLaunchAndStop();
@@ -158,6 +162,24 @@ namespace Knock.Scenarios
 
             ManageOwnerThreadScenario scenario = await Scenario.Register(
                 new ManageOwnerThreadScenario(this, Locale.Get("threads.manage_owner"), serverId));
+
+            await componentArg.DeferAsync();
+        }
+
+        private async Task ActionManageWhitelist(SocketMessageComponent componentArg)
+        {
+            if (Threads.ContainsKey("manage-whitelist"))
+            {
+                EmbedBuilder alreadyEmbedBuilder = new EmbedBuilder()
+                    .WithTitle(Locale.Get("embed.manage_server.already_created_thread.title"))
+                    .WithColor(Color["error"]);
+
+                await componentArg.RespondAsync(embed: alreadyEmbedBuilder.Build(), ephemeral: true);
+                return;
+            }
+
+            ManageWhitelistThreadScenario scenario = await Scenario.Register(
+                new ManageWhitelistThreadScenario(this, Locale.Get("threads.manage_whitelist"), serverId));
 
             await componentArg.DeferAsync();
         }
