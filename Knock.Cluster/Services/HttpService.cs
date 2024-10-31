@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace Knock.Cluster.Services
@@ -23,6 +24,28 @@ namespace Knock.Cluster.Services
             res.EnsureSuccessStatusCode();
             await res.Content.CopyToAsync(file);
             return Path.Combine(dir.FullName, name);
+        }
+
+        public async Task<HttpResponseModel<JsonDocument>> Get(string url)
+        {
+            using (HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, url))
+            using (HttpResponseMessage response = await http.SendAsync(request))
+            {
+                string resText = await response.Content.ReadAsStringAsync();
+                JsonDocument json;
+
+                try
+                {
+                    json = JsonDocument.Parse(resText);
+                }
+                catch
+                {
+                    json = null;
+                }
+                HttpResponseModel<JsonDocument> res = new HttpResponseModel<JsonDocument>(response.StatusCode, json);
+
+                return res;
+            }
         }
     }
 }

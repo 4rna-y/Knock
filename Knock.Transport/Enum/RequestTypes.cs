@@ -14,6 +14,8 @@ namespace Knock.Transport.Enum
         GetServerPropertyValue,
         Launch,
         Stop,
-        Log
+        Log,
+        Ops,
+        Whitelist
     }
 }

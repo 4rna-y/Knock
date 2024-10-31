@@ -32,6 +32,8 @@ namespace Knock.Cluster.Services
             RequestTypes.Launch => await ResponseLaunch(request),
             RequestTypes.Stop => await ResponseStop(request),
             RequestTypes.Log => await ResponseLog(request),
+            RequestTypes.Ops => await ResponseOps(request),
+            RequestTypes.Whitelist => await ResponseWhitelist(request),
             _ => null
         };
 
@@ -183,6 +185,70 @@ namespace Knock.Cluster.Services
                 .WithRequestType(RequestTypes.Stop)
                 .WithGuid(packet.Guid)
                 .WithData(Encoding.UTF8.GetBytes(log))
+                .Build();
+
+            return dest;
+        }
+
+        private async Task<DataPacket> ResponseOps(DataPacket packet)
+        {
+            logger.Info("Response Ops");
+
+            byte type = packet.GetByteData(0);
+            Guid guid = packet.GetGuidData(1);
+            List<Guid> ids = new List<Guid>();
+            int listLength = packet.Data.Length - 17;
+            int amount = listLength / 16;
+
+            for (int i = 0; i < amount; i++)
+            {
+                ids.Add(packet.GetGuidData(1 + (16 * (i + 1))));
+            }
+
+            IResult res = null;
+
+            if (type == 0) res = await container.GetOpedIds(guid);
+            if (type == 1) res = await container.AddOpedIds(guid, ids);
+            if (type == 2) res = await container.RemoveOpedIds(guid, ids);
+
+            DataPacket dest = new DataPacket.Builder()
+                .WithPacketType(PacketTypes.Response)
+                .WithDataType(DataTypes.Plain)
+                .WithRequestType(RequestTypes.Ops)
+                .WithGuid(packet.Guid)
+                .WithData(res.ToPacket())
+                .Build();
+            
+            return dest;
+        }
+
+        private async Task<DataPacket> ResponseWhitelist(DataPacket packet)
+        {
+            logger.Info("Response Whitelist");
+
+            byte type = packet.GetByteData(0);
+            Guid guid = packet.GetGuidData(1);
+            List<Guid> ids = new List<Guid>();
+            int listLength = packet.Data.Length - 17;
+            int amount = listLength / 16;
+
+            for (int i = 0; i < amount; i++)
+            {
+                ids.Add(packet.GetGuidData(1 + (16 * (i + 1))));
+            }
+
+            IResult res = null;
+
+            if (type == 0) res = await container.GetWhitelistedIds(guid);
+            if (type == 1) res = await container.AddWhitelistedIds(guid, ids);
+            if (type == 2) res = await container.RemoveWhitelistedIds(guid, ids);
+
+            DataPacket dest = new DataPacket.Builder()
+                .WithPacketType(PacketTypes.Response)
+                .WithDataType(DataTypes.Plain)
+                .WithRequestType(RequestTypes.Whitelist)
+                .WithGuid(packet.Guid)
+                .WithData(res.ToPacket())
                 .Build();
 
             return dest;

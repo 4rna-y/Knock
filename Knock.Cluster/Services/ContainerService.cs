@@ -7,6 +7,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -175,17 +176,188 @@ namespace Knock.Cluster.Services
             return Task.FromResult(new Ok(0, string.Join(",", ids)) as IResult);
         }
 
-        public async Task SetOpedIds(Guid id, List<Guid> uuids)
+        public async Task<IResult> AddOpedIds(Guid id, List<Guid> uuids)
         {
-            string path = Path.Combine(containerDir.FullName, id.ToString(), "ops.json");
-            Ops ops = JsonSerializer.Deserialize<Ops>(File.ReadAllText(path));
-
-            foreach (Guid uuid in uuids)
+            try
             {
-                if (!ops.Any(x => x.Id == uuid))
+                string path = Path.Combine(containerDir.FullName, id.ToString(), "ops.json");
+                Ops ops = JsonSerializer.Deserialize<Ops>(File.ReadAllText(path));
+
+                foreach (Guid uuid in uuids)
                 {
-                    
+                    if (!ops.Any(x => x.Id == uuid))
+                    {
+                        HttpResponseModel<JsonDocument> response =
+                            await http.Get(
+                                $"https://sessionserver.mojang.com/session/minecraft/profile/{uuid}");
+
+                        if (response.Code == HttpStatusCode.OK)
+                        {
+                            Operator op = new Operator()
+                            {
+                                Id = uuid,
+                                Name = response.Result.RootElement.GetProperty("name").GetString(),
+                                Level = 4,
+                                BypassesPlayerLimit = true
+                            };
+                            ops.Add(op);
+                        }
+                    }
                 }
+
+                string json = JsonSerializer.Serialize(ops);
+                File.Delete(path);
+
+                using (StreamWriter sw = File.CreateText(path))
+                {
+                    await sw.WriteLineAsync(json);
+                    await sw.FlushAsync();
+                    sw.Close();
+                }
+
+                return new Ok();
+            }
+            catch (IOException)
+            {
+                return new Error(1, "io error");
+            }
+            catch (JsonException)
+            {
+                return new Error(2, "format error");
+            }
+        }
+
+        public async Task<IResult> RemoveOpedIds(Guid id, List<Guid> uuids)
+        {
+            try
+            {
+                string path = Path.Combine(containerDir.FullName, id.ToString(), "ops.json");
+                Ops ops = JsonSerializer.Deserialize<Ops>(File.ReadAllText(path));
+
+                foreach (Guid uuid in uuids)
+                {
+                    if (ops.FirstOrDefault(x => x.Id == uuid) is Operator op)
+                    {
+                        ops.Remove(op);
+                    }
+                }
+
+                string json = JsonSerializer.Serialize(ops);
+                File.Delete(path);
+
+                using (StreamWriter sw = File.CreateText(path))
+                {
+                    await sw.WriteLineAsync(json);
+                    await sw.FlushAsync();
+                    sw.Close();
+                }
+
+                return new Ok();
+            }
+            catch (IOException)
+            {
+                return new Error(1, "io error");
+            }
+            catch (JsonException)
+            {
+                return new Error(2, "format error");
+            }
+        }
+
+        public Task<IResult> GetWhitelistedIds(Guid id)
+        {
+            string path = Path.Combine(containerDir.FullName, id.ToString(), "whitelist.json");
+            WhitelistedUsers wUsers = 
+                JsonSerializer.Deserialize<WhitelistedUsers>(File.ReadAllText(path));
+            List<Guid> uuids = wUsers.Select(x => x.Id).ToList();
+            return Task.FromResult(new Ok(0, string.Join(",", uuids)) as IResult); 
+        }
+
+        public async Task<IResult> AddWhitelistedIds(Guid id, List<Guid> uuids)
+        {
+            try
+            {
+                string path = Path.Combine(containerDir.FullName, id.ToString(), "whitelist.json");
+                WhitelistedUsers wUsers =
+                    JsonSerializer.Deserialize<WhitelistedUsers>(File.ReadAllText(path));
+
+                foreach (Guid uuid in uuids)
+                {
+                    if (!wUsers.Any(x => x.Id == uuid))
+                    {
+                        HttpResponseModel<JsonDocument> response =
+                            await http.Get(
+                                $"https://sessionserver.mojang.com/session/minecraft/profile/{uuid}");
+
+                        if (response.Code == HttpStatusCode.OK)
+                        {
+                            WhitelistedUser op = new WhitelistedUser()
+                            {
+                                Id = uuid,
+                                Name = response.Result.RootElement.GetProperty("name").GetString()
+                            };
+                            wUsers.Add(op);
+                        }
+                    }
+                }
+
+                string json = JsonSerializer.Serialize(wUsers);
+                File.Delete(path);
+
+                using (StreamWriter sw = File.CreateText(path))
+                {
+                    await sw.WriteLineAsync(json);
+                    await sw.FlushAsync();
+                    sw.Close();
+                }
+
+                return new Ok();
+            }
+            catch (IOException)
+            {
+                return new Error(1, "io error");
+            }
+            catch (JsonException)
+            {
+                return new Error(2, "format error");
+            }
+        }
+
+        public async Task<IResult> RemoveWhitelistedIds(Guid id, List<Guid> uuids)
+        {
+            try
+            {
+                string path = Path.Combine(containerDir.FullName, id.ToString(), "whitelist.json");
+                WhitelistedUsers wUsers =
+                    JsonSerializer.Deserialize<WhitelistedUsers>(File.ReadAllText(path));
+
+                foreach (Guid uuid in uuids)
+                {
+                    if (wUsers.FirstOrDefault(x => x.Id == uuid) is WhitelistedUser wUser)
+                    {
+                        wUsers.Remove(wUser);
+                    }
+                }
+
+                string json = JsonSerializer.Serialize(wUsers);
+                File.Delete(path);
+
+                using (StreamWriter sw = File.CreateText(path))
+                {
+                    await sw.WriteLineAsync(json);
+                    await sw.FlushAsync();
+                    sw.Close();
+                }
+
+                return new Ok();
+            }
+            catch (IOException)
+            {
+                return new Error(1, "io error");
+            }
+            catch (JsonException)
+            {
+                return new Error(2, "format error");
             }
         }
     }
