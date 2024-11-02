@@ -20,8 +20,6 @@ namespace Knock.Scenarios
         private Guid serverId;
         private RestUserMessage manageMessage;
 
-        
-
         public ManageServerScenario(Guid serverId, SocketGuild guild, SocketUser user, SocketCategoryChannel category)
             : base(guild, user, category, "manage-server")
         {
@@ -35,6 +33,13 @@ namespace Knock.Scenarios
                 "select-server-properties-back", async arg => await SwapBackSelectMenuItem(arg, "select-server-properties")));
             Models.Add(new ScenarioModel(
                 "select-server-properties-next", async arg => await SwapNextSelectMenuItem(arg, "select-server-properties")));
+
+            Scenario.AddUploadedFileProcedure(TextChannel.Id, OnFileUploaded);
+        }
+
+        private async Task OnFileUploaded(SocketMessage msg)
+        {
+            
         }
 
         public override async Task Start()
@@ -47,6 +52,14 @@ namespace Knock.Scenarios
                 await TextChannel.AddPermissionOverwriteAsync(
                     Guild.GetUser(ownerId), OverwritePermissions.AllowAll(TextChannel));
             }
+
+            MinecraftAccounts accs = Data.Get<MinecraftAccounts>("mcinfo");
+            List<Guid> uuids = accs.Accounts
+                    .Where(x => container.Owners.Contains(x.DiscordId))
+                    .Select(x => Guid.Parse(x.MinecraftId))
+                    .ToList();
+
+            await Request.AddOpedIds(serverId, uuids);
 
             EmbedBuilder embedBuilder = new EmbedBuilder()
                 .WithTitle(string.Format(Locale.Get("embed.manage_server.manage_top.title"), container.Name))

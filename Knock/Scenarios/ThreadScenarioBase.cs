@@ -35,6 +35,7 @@ namespace Knock.Scenarios
         protected async Task Close(SocketInteraction arg)
         {
             await arg.DeferAsync();
+            ChannelScenario.Threads.Remove(Key);
             await Scenario.Unregister(ScenarioId);
             await ThreadChannel.DeleteAsync();
         }

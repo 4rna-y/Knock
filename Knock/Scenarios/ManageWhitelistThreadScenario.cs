@@ -58,7 +58,6 @@ namespace Knock.Scenarios
         {
             SocketMessageComponent componentArg = arg as SocketMessageComponent;
 
-            await arg.DeferAsync();
             await ToggleMessage("select_operation", true);
             
             string key = string.Join(", ", componentArg.Data.Values);
@@ -85,6 +84,8 @@ namespace Knock.Scenarios
                 await ToggleMessage("select_operation", false);
                 return;
             }
+
+            await arg.DeferAsync();
 
             EmbedBuilder embed = new EmbedBuilder()
                 .CreateLocalized("embed.manage_server.manage_whitelist.select_add_user")
@@ -126,6 +127,8 @@ namespace Knock.Scenarios
                 await ToggleMessage("select_operation", false);
                 return;
             }
+
+            await arg.DeferAsync();
 
             EmbedBuilder embed = new EmbedBuilder()
                 .CreateLocalized("embed.manage_server.manage_whitelist.select_remove_user")

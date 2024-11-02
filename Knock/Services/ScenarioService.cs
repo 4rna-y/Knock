@@ -18,6 +18,7 @@ namespace Knock.Services
 
         private Dictionary<string, ScenarioBase> scenarios;
         private Dictionary<string, RestTextChannel> registeredChannels;
+        private Dictionary<ulong, Func<SocketMessage, Task>> allowDropFuncs;
 
         public ScenarioService(IConfiguration config, LocaleService locale)
         {
@@ -26,6 +27,7 @@ namespace Knock.Services
 
             registeredChannels = new Dictionary<string, RestTextChannel>();
             scenarios = new Dictionary<string, ScenarioBase>();
+            allowDropFuncs = new Dictionary<ulong, Func<SocketMessage, Task>>();
         }
 
         public bool IsInProgress<T>(ulong user) where T : ScenarioBase
@@ -86,6 +88,17 @@ namespace Knock.Services
         {
             if (!scenarios.ContainsKey(id)) return;
             await scenarios[id].Interact(name, arg);
+        }
+
+        public void AddUploadedFileProcedure(ulong id, Func<SocketMessage, Task> func)
+        {
+            allowDropFuncs.Add(id, func);
+        }
+
+        public async Task UploadedFile(ulong channelId, SocketMessage msg)
+        {
+            if (!allowDropFuncs.ContainsKey(channelId)) return;
+            await allowDropFuncs[channelId](msg);
         }
 
         public async Task Unregister(string id)

@@ -375,6 +375,10 @@ namespace Knock.Services
 
             IResult result = ResultHelper.FromPacket(res);
             string joinedIds = result.Message;
+            if (string.IsNullOrWhiteSpace(joinedIds))
+            {
+                return new List<Guid>();
+            }
             List<string> ids = joinedIds.Split(",").ToList();
             return ids.Select(Guid.Parse).ToList();
         }

@@ -56,10 +56,19 @@ namespace Knock
             client.ButtonExecuted += OnButtonExecuted;
             client.SelectMenuExecuted += OnSelectMenuExecuted;
             client.ModalSubmitted += OnModalSubmitted;
+            client.MessageReceived += OnMessageReceived;
             handler.Log += OnHandlerLog;
             handler.InteractionExecuted += OnInteractionExecuted;
 
             await handler.AddModulesAsync(Assembly.GetEntryAssembly(), services);
+        }
+
+        private async Task OnMessageReceived(SocketMessage arg)
+        {
+            if (arg is not IUserMessage userMessage || userMessage.Attachments.Count == 0)
+                return;
+
+            await scenario.UploadedFile(userMessage.Channel.Id, arg);
         }
 
         private async Task OnSelectMenuExecuted(SocketMessageComponent arg)

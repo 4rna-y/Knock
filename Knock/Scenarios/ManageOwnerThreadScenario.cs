@@ -205,7 +205,7 @@ namespace Knock.Scenarios
                     .Select(x => Guid.Parse(x.MinecraftId))
                     .ToList();
 
-                result = await Request.AddOpedIds(containerId, uuids);
+                result = await Request.RemoveOpedIds(containerId, uuids);
             }
 
             EmbedBuilder resultEmbed = new EmbedBuilder()
