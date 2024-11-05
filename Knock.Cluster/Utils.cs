@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -47,6 +48,28 @@ namespace Knock.Cluster
             Task waitForExitTask = process.WaitForExitAsync();
 
             return await Task.WhenAny(waitForExitTask, Task.Delay(timeoutMilliseconds)) == waitForExitTask;
+        }
+
+        public static FileInfo GetFile(this DirectoryInfo directory, string filePath)
+        {
+            string fullPath = Path.IsPathRooted(filePath) ? filePath : Path.Combine(directory.FullName, filePath);
+            FileInfo fileInfo = new FileInfo(fullPath);
+
+            return fileInfo.Exists ? fileInfo : null;
+        }
+
+        public static DirectoryInfo GetDirectory(this DirectoryInfo directory, string filePath)
+        {
+            string fullPath = Path.IsPathRooted(filePath) ? filePath : Path.Combine(directory.FullName, filePath);
+            DirectoryInfo dirInfo = new DirectoryInfo(fullPath);
+
+            return dirInfo.Exists ? dirInfo : null;
+        }
+
+        public static bool Contains(this DirectoryInfo directory, string fileName)
+        {
+            string path = Path.Combine(directory.FullName, fileName);
+            return Directory.Exists(path) | File.Exists(path);
         }
     }
 }

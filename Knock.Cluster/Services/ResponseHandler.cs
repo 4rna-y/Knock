@@ -253,5 +253,25 @@ namespace Knock.Cluster.Services
 
             return dest;
         }
+
+        private async Task<DataPacket> ResponseFileReceived(DataPacket packet)
+        {
+            logger.Info("Response File");
+
+            List<FileAttachment> files = new List<FileAttachment>();
+
+            int fileCount = packet.Get<int>();
+            for (int i = 0; i < fileCount; i++)
+            {
+                int nameLength = packet.Get<int>();
+                int urlLength = packet.Get<int>();
+                string name = packet.Get(nameLength);
+                string url = packet.Get(urlLength);
+
+                files.Add(new FileAttachment(name, url));
+            }
+
+            
+        }
     }
 }

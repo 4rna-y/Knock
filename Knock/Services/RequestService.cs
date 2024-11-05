@@ -1,4 +1,5 @@
-﻿using Fleck;
+﻿using Discord;
+using Fleck;
 using Knock.Models;
 using Knock.Models.Response;
 using Knock.Shared;
@@ -435,6 +436,47 @@ namespace Knock.Services
                 .WithPacketType(PacketTypes.Request)
                 .WithDataType(DataTypes.Plain)
                 .WithRequestType(RequestTypes.Whitelist)
+                .WithGuid(id)
+                .WithData(dest.ToArray())
+                .Build();
+
+            byte[] req = webSocket.GetEncryptedData(packet);
+
+            await connection.Send(req);
+            webSocket.ResponseAwaitable.TryAdd(id, new TaskCompletionSource<byte[]>());
+            webSocket.ResponseAwaitable.TryGetValue(id, out TaskCompletionSource<byte[]> task);
+            byte[] res = await task.Task;
+
+            return ResultHelper.FromPacket(res);
+        }
+
+        public async Task<IResult> SendFiles(Guid containerId, List<Attachment> attachments)
+        {
+            ServerContainer container =
+               data.Get<ServerContainers>("containers").Containers.FirstOrDefault(x => x.Id.Equals(containerId));
+            IWebSocketConnection connection =
+                this.GetConnections().FirstOrDefault(
+                    x => container.StoredLocation.Equals($"{x.ConnectionInfo.ClientIpAddress}:{x.ConnectionInfo.ClientPort}"));
+        
+            List<byte> dest = new List<byte>();
+
+            dest.AddRange(BitConverter.GetBytes(attachments.Count));
+            foreach (Attachment file in attachments)
+            {
+                byte[] nameRaw = Encoding.UTF8.GetBytes(file.Filename);
+                byte[] urlRaw = Encoding.UTF8.GetBytes(file.Url);
+
+                dest.AddRange(BitConverter.GetBytes(nameRaw.Length));
+                dest.AddRange(BitConverter.GetBytes(urlRaw.Length));
+                dest.AddRange(nameRaw);
+                dest.AddRange(urlRaw);
+            }
+
+            Guid id = Guid.NewGuid();
+            DataPacket packet = new DataPacket.Builder()
+                .WithPacketType(PacketTypes.Request)
+                .WithDataType(DataTypes.Plain)
+                .WithRequestType(RequestTypes.SendFile)
                 .WithGuid(id)
                 .WithData(dest.ToArray())
                 .Build();

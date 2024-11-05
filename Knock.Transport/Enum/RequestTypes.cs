@@ -16,6 +16,7 @@ namespace Knock.Transport.Enum
         Stop,
         Log,
         Ops,
-        Whitelist
+        Whitelist,
+        SendFile
     }
 }

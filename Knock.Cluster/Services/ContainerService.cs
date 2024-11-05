@@ -5,11 +5,14 @@ using NLog;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Knock.Cluster.Services
@@ -23,6 +26,7 @@ namespace Knock.Cluster.Services
         private readonly ProcessesManager process;
 
         private DirectoryInfo containerDir;
+        private DirectoryInfo tmpDir;
 
         public ContainerService(
             IConfiguration config,
@@ -38,8 +42,10 @@ namespace Knock.Cluster.Services
             this.process = process;
 
             containerDir = new DirectoryInfo("containers");
+            tmpDir = new DirectoryInfo("tmp");
 
             if (!containerDir.Exists) containerDir.Create();
+            if (!tmpDir.Exists) tmpDir.Create();
         }
 
         public async Task<ErrorInfo> Create(Func<ContainerBuilder, ContainerBuilder> builderPredicate)
@@ -358,6 +364,54 @@ namespace Knock.Cluster.Services
             catch (JsonException)
             {
                 return new Error(2, "format error");
+            }
+        }
+
+        public async Task<IResult> AttachFile(Guid id, FileAttachment file)
+        {
+            try
+            {
+                string path = Path.Combine(containerDir.FullName, id.ToString());
+                DirectoryInfo dir = new DirectoryInfo(path);
+
+                string ext = Path.GetExtension(file.Name);
+                if (ext == ".zip")
+                {
+
+                    Guid dId = Guid.NewGuid();
+                    string zipPath = await http.Download(file.Url, tmpDir, dId.ToString() + ext);
+                    string zipExtPath = Path.Combine(tmpDir.FullName, dId.ToString());
+                    await Task.Run(() => ZipFile.ExtractToDirectory(zipPath, zipExtPath));
+                    DirectoryInfo zipExt = new DirectoryInfo(zipExtPath);
+
+                    bool isWorldData = zipExt.Contains("level.dat");
+                    bool isDataPack = zipExt.Contains("pack.mcmeta");
+
+                    string worldName = await GetServerPropertyValue(id, "level-name");
+                    if (isDataPack)
+                    {
+                        DirectoryInfo worldDir = dir.GetDirectory(worldName);
+                        DirectoryInfo dataPacksDir = worldDir.GetDirectory("datapacks");
+
+                        if (dataPacksDir is null) return new Error(2, "not supported");
+                        File.Move(zipPath, Path.Combine(dataPacksDir.FullName, file.Name));
+
+                        return new Ok();
+                    }
+
+                    if (isWorldData)
+                    {
+                        DirectoryInfo worldDir = dir.GetDirectory(worldName);
+                        Directory.Move()
+                    }
+                }
+                else 
+                    return new Error(1, "invaild format");
+
+            }
+            catch (IOException)
+            {
+                return 
             }
         }
     }
