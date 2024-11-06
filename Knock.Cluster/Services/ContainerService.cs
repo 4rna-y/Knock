@@ -402,7 +402,13 @@ namespace Knock.Cluster.Services
                     if (isWorldData)
                     {
                         DirectoryInfo worldDir = dir.GetDirectory(worldName);
-                        Directory.Move()
+                        if (worldDir.Name == file.Name)
+                        {
+                            worldDir.MoveTo(Path.Combine(dir.FullName, worldDir.Name + "_old"));
+                        }
+                        CopyDirectory(
+                            zipExt.FullName, 
+                            Path.Combine(dir.FullName, Path.GetFileNameWithoutExtension(file.Name)));  
                     }
                 }
                 else 
@@ -412,6 +418,26 @@ namespace Knock.Cluster.Services
             catch (IOException)
             {
                 return 
+            }
+        }
+
+        public static void CopyDirectory(string sourceDir, string destDir)
+        {
+            if (!Directory.Exists(destDir))
+            {
+                Directory.CreateDirectory(destDir);
+            }
+
+            foreach (string filePath in Directory.GetFiles(sourceDir))
+            {
+                string destFilePath = Path.Combine(destDir, Path.GetFileName(filePath));
+                File.Copy(filePath, destFilePath);
+            }
+
+            foreach (string dirPath in Directory.GetDirectories(sourceDir))
+            {
+                string destDirPath = Path.Combine(destDir, Path.GetFileName(dirPath));
+                CopyDirectory(dirPath, destDirPath);
             }
         }
     }
