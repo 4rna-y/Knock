@@ -377,7 +377,6 @@ namespace Knock.Cluster.Services
                 string ext = Path.GetExtension(file.Name);
                 if (ext == ".zip")
                 {
-
                     Guid dId = Guid.NewGuid();
                     string zipPath = await http.Download(file.Url, tmpDir, dId.ToString() + ext);
                     string zipExtPath = Path.Combine(tmpDir.FullName, dId.ToString());
@@ -409,6 +408,13 @@ namespace Knock.Cluster.Services
                         CopyDirectory(
                             zipExt.FullName, 
                             Path.Combine(dir.FullName, Path.GetFileNameWithoutExtension(file.Name)));  
+                        
+                        return new Ok();
+                    }
+
+                    if (isDataPack == isWorldData)
+                    {
+                        return new Error(3, "wtf is this file");
                     }
                 }
                 else 
@@ -417,8 +423,10 @@ namespace Knock.Cluster.Services
             }
             catch (IOException)
             {
-                return 
+                return new Error(4, "io error");
             }
+
+            return new Ok();
         }
 
         public static void CopyDirectory(string sourceDir, string destDir)
