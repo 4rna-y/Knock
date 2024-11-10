@@ -69,6 +69,7 @@ namespace Knock.Cluster.Services
                 await CreateServerProperties(dir);
                 await CreateEulaFile(dir);
                 await json.CreateFile(launchInfo, dir, "launchinfo.json");
+                await WriteServerProperty(builder.Id, "level-name", "world");
                 
                 return new ErrorInfo();
             }
@@ -374,6 +375,10 @@ namespace Knock.Cluster.Services
                 string path = Path.Combine(containerDir.FullName, id.ToString());
                 DirectoryInfo dir = new DirectoryInfo(path);
 
+                string worldName = await GetServerPropertyValue(id, "level-name");
+                DirectoryInfo worldDir = dir.GetDirectory(worldName);
+                if (!worldDir.Exists) worldDir.Create();
+
                 string ext = Path.GetExtension(file.Name);
                 if (ext == ".zip")
                 {
@@ -386,47 +391,56 @@ namespace Knock.Cluster.Services
                     bool isWorldData = zipExt.Contains("level.dat");
                     bool isDataPack = zipExt.Contains("pack.mcmeta");
 
-                    string worldName = await GetServerPropertyValue(id, "level-name");
+                    if (isDataPack == isWorldData)
+                    {
+                        return new Error(2, "wtf is this file");
+                    }
+
                     if (isDataPack)
                     {
-                        DirectoryInfo worldDir = dir.GetDirectory(worldName);
                         DirectoryInfo dataPacksDir = worldDir.GetDirectory("datapacks");
+                        if (!dataPacksDir.Exists) dataPacksDir.Create();
 
-                        if (dataPacksDir is null) return new Error(2, "not supported");
-                        File.Move(zipPath, Path.Combine(dataPacksDir.FullName, file.Name));
+                        string fileName = Path.GetFileNameWithoutExtension(file.Name);
+                        string dstPath = Path.Combine(dataPacksDir.FullName, file.Name);
+
+                        string destFullPath = dataPacksDir.GetNonDuplicatedName(fileName, ext);
+                        File.Move(zipPath, destFullPath);
 
                         return new Ok();
                     }
 
                     if (isWorldData)
                     {
-                        DirectoryInfo worldDir = dir.GetDirectory(worldName);
-                        if (worldDir.Name == file.Name)
-                        {
-                            worldDir.MoveTo(Path.Combine(dir.FullName, worldDir.Name + "_old"));
-                        }
-                        CopyDirectory(
-                            zipExt.FullName, 
-                            Path.Combine(dir.FullName, Path.GetFileNameWithoutExtension(file.Name)));  
-                        
+                        string destFullPath = dir.GetNonDuplicatedName(Path.GetFileNameWithoutExtension(file.Name));
+                        CopyDirectory(zipExt.FullName, destFullPath);
+                        await WriteServerProperty(id, "level-name", Path.GetFileNameWithoutExtension(file.Name));
+
                         return new Ok();
                     }
 
-                    if (isDataPack == isWorldData)
-                    {
-                        return new Error(3, "wtf is this file");
-                    }
+                    return new Ok();
                 }
-                else 
+                else
+                if (ext == ".jar")
+                {
+                    DirectoryInfo pluginDir = dir.GetDirectory("plugins");
+                    if (!pluginDir.Exists) pluginDir.Create();
+
+
+                }
+                else
+                {
                     return new Error(1, "invaild format");
+                }
 
             }
             catch (IOException)
             {
-                return new Error(4, "io error");
+                return new Error(3, "io error");
             }
 
-            return new Ok();
+            
         }
 
         public static void CopyDirectory(string sourceDir, string destDir)

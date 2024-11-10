@@ -196,6 +196,15 @@
       "on_close": {
         "title": "🔒  Couldnt close",
         "description": "The server container must be stopped before closing the channel."
+      },
+      "send_file": {
+        "title": "✈️  Sending Files...",
+        "description": {
+          "0" : "**✅ Success**",
+          "1" : "**❓ Invalid file**",
+          "2" : "**❓ Invalid file**",
+          "3" : "**😿 Error**"
+        }
       }
     },
 

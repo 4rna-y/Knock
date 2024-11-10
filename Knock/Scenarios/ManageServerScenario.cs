@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,16 +36,34 @@ namespace Knock.Scenarios
             Models.Add(new ScenarioModel(
                 "select-server-properties-next", async arg => await SwapNextSelectMenuItem(arg, "select-server-properties")));
 
-            Scenario.AddUploadedFileProcedure(TextChannel.Id, OnFileUploaded);
+            
         }
 
         private async Task OnFileUploaded(SocketMessage msg)
         {
-            
+            List<Attachment> files = msg.Attachments.ToList();
+
+            List<IResult> ress = await Request.SendFiles(serverId, files);
+            StringBuilder desc = new StringBuilder();
+            for (int i = 0; i < ress.Count; i++)
+            {
+                desc.Append(files[i].Filename)
+                    .Append(" : ")
+                    .AppendLine(Locale.Get($"embed.manage_server.send_file.description.{ress[i].Code}"));
+            }
+
+            EmbedBuilder embed = new EmbedBuilder()
+                .WithTitle(Locale.Get($"embed.manage_server.send_file.title"))
+                .WithDescription(desc.ToString())
+                .WithColor(Color["success"]);
+
+            await TextChannel.SendMessageAsync(
+                embed: embed.Build(), messageReference: new MessageReference(msg.Id));
         }
 
         public override async Task Start()
         {
+            Scenario.AddUploadedFileProcedure(TextChannel.Id, OnFileUploaded);
             ServerContainer container = Server.GetContainer(serverId);
             Server.Lock(serverId);
 

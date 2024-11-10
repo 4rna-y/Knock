@@ -55,7 +55,7 @@ namespace Knock.Cluster
             string fullPath = Path.IsPathRooted(filePath) ? filePath : Path.Combine(directory.FullName, filePath);
             FileInfo fileInfo = new FileInfo(fullPath);
 
-            return fileInfo.Exists ? fileInfo : null;
+            return fileInfo;
         }
 
         public static DirectoryInfo GetDirectory(this DirectoryInfo directory, string filePath)
@@ -63,13 +63,43 @@ namespace Knock.Cluster
             string fullPath = Path.IsPathRooted(filePath) ? filePath : Path.Combine(directory.FullName, filePath);
             DirectoryInfo dirInfo = new DirectoryInfo(fullPath);
 
-            return dirInfo.Exists ? dirInfo : null;
+            return dirInfo;
         }
 
         public static bool Contains(this DirectoryInfo directory, string fileName)
         {
             string path = Path.Combine(directory.FullName, fileName);
             return Directory.Exists(path) | File.Exists(path);
+        }
+
+        public static string GetNonDuplicatedName(this DirectoryInfo directory, string fileName, string ext)
+        {
+            string suffix = "";
+            string act = $"{fileName}{suffix}{ext}";
+            for (int i = 1; ; i++)
+            {
+                FileInfo info = directory.GetFile(act);
+                if (!info.Exists) break;
+                suffix = $"({i})";
+                act = $"{fileName}{suffix}{ext}";
+            }
+
+            return Path.Combine(directory.FullName, act);
+        }
+
+        public static string GetNonDuplicatedName(this DirectoryInfo directory, string dirName)
+        {
+            string suffix = "";
+            string act = $"{dirName}{suffix}";
+            for (int i = 1; ; i++)
+            {
+                DirectoryInfo info = directory.GetDirectory(act);
+                if (!info.Exists) break;
+                suffix = $"({i})";
+                act = $"{dirName}{suffix}";
+            }
+
+            return Path.Combine(directory.FullName, act);
         }
     }
 }

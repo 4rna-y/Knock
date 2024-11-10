@@ -81,13 +81,9 @@ namespace Knock
                 }
                 else
                 {
-
                     Console.WriteLine(locale.Get("error.fatal", "error.no_token"));
                     return;
                 }
-
-                
-
             }
             catch (IOException e)
             {

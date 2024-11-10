@@ -34,6 +34,7 @@ namespace Knock.Cluster.Services
             RequestTypes.Log => await ResponseLog(request),
             RequestTypes.Ops => await ResponseOps(request),
             RequestTypes.Whitelist => await ResponseWhitelist(request),
+            RequestTypes.SendFile => await ResponseFileReceived(request),
             _ => null
         };
 
@@ -258,9 +259,12 @@ namespace Knock.Cluster.Services
         {
             logger.Info("Response File");
 
-            List<FileAttachment> files = new List<FileAttachment>();
-
+            List<byte> destData = new List<byte>();
+            
+            Guid containerId = packet.Get<Guid>();
             int fileCount = packet.Get<int>();
+            destData.AddRange(BitConverter.GetBytes(fileCount));
+
             for (int i = 0; i < fileCount; i++)
             {
                 int nameLength = packet.Get<int>();
@@ -268,10 +272,21 @@ namespace Knock.Cluster.Services
                 string name = packet.Get(nameLength);
                 string url = packet.Get(urlLength);
 
-                files.Add(new FileAttachment(name, url));
+                IResult res = await container.AttachFile(containerId, new FileAttachment(name, url));
+                byte[] data = res.ToPacket();
+                destData.AddRange(BitConverter.GetBytes(data.Length));
+                destData.AddRange(data);
             }
 
-            
+            DataPacket dest = new DataPacket.Builder()
+                .WithPacketType(PacketTypes.Response)
+                .WithDataType(DataTypes.Plain)
+                .WithRequestType(RequestTypes.SendFile)
+                .WithGuid(packet.Guid)
+                .WithData(destData.ToArray())
+                .Build();
+
+            return dest;
         }
     }
 }

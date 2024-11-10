@@ -8,6 +8,7 @@ using Knock.Transport.Enum;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -450,7 +451,7 @@ namespace Knock.Services
             return ResultHelper.FromPacket(res);
         }
 
-        public async Task<IResult> SendFiles(Guid containerId, List<Attachment> attachments)
+        public async Task<List<IResult>> SendFiles(Guid containerId, List<Attachment> attachments)
         {
             ServerContainer container =
                data.Get<ServerContainers>("containers").Containers.FirstOrDefault(x => x.Id.Equals(containerId));
@@ -460,6 +461,7 @@ namespace Knock.Services
         
             List<byte> dest = new List<byte>();
 
+            dest.AddRange(containerId.ToByteArray());
             dest.AddRange(BitConverter.GetBytes(attachments.Count));
             foreach (Attachment file in attachments)
             {
@@ -488,7 +490,24 @@ namespace Knock.Services
             webSocket.ResponseAwaitable.TryGetValue(id, out TaskCompletionSource<byte[]> task);
             byte[] res = await task.Task;
 
-            return ResultHelper.FromPacket(res);
+            List<IResult> results = new List<IResult>();
+
+            int count = BitConverter.ToInt32(res.AsSpan()[..4]);
+            int offset = 4;
+            for (int i = 0; i < count; i++)
+            {
+                int length = BitConverter.ToInt32(res, offset);
+                offset += 4;
+
+                byte[] data = new byte[length];
+                Array.Copy(res, offset, data, 0, length);
+                offset += length;
+
+                IResult result = ResultHelper.FromPacket(data);
+                results.Add(result);
+            }
+
+            return results;
         }
     }
 }
