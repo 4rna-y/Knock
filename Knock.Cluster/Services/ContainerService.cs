@@ -10,6 +10,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -427,7 +428,13 @@ namespace Knock.Cluster.Services
                     DirectoryInfo pluginDir = dir.GetDirectory("plugins");
                     if (!pluginDir.Exists) pluginDir.Create();
 
+                    string fileName = Path.GetFileNameWithoutExtension(file.Name);
+                    string destPath = Path.Combine(pluginDir.FullName, file.Name);
 
+                    string destFullPath = pluginDir.GetNonDuplicatedName(fileName, ext);
+                    await http.Download(file.Url, tmpDir, destFullPath);
+
+                    return new Ok();
                 }
                 else
                 {

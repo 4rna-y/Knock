@@ -140,7 +140,28 @@ namespace Knock
 
                     await arg.DeferAsync();
                     await scenario.Register(new LoadServerScenario(guild, arg.User, category));
-                    
+
+                }
+                else
+                if (id[1].Equals("reg_account"))
+                {
+                    if (scenario.IsInProgress<AccountRegistrationScenario>(arg.User.Id))
+                    {
+                        ChannelScenarioBase s = scenario.GetScenario<AccountRegistrationScenario>(arg.User.Id).FirstOrDefault() as ChannelScenarioBase;
+                        IMessage msg = await s.TextChannel.GetMessageAsync(s.MentionMessageId);
+                        EmbedBuilder embed = new EmbedBuilder()
+                            .WithTitle(locale.Get("embed.scenario_created.title"))
+                            .WithDescription(
+                                string.Format(locale.Get("embed.scenario_created.description"),
+                                msg.GetJumpUrl()))
+                            .WithColor(color["warning"]);
+
+                        await arg.RespondAsync(embed: embed.Build(), ephemeral: true);
+                        return;
+                    }
+
+                    await arg.DeferAsync();
+                    await scenario.Register(new AccountRegistrationScenario(guild, arg.User, category));
                 }
             }
             else
@@ -256,17 +277,23 @@ namespace Knock
 
             ComponentBuilder actionButtons = new ComponentBuilder()
                 .WithButton(
+                    locale.Get("button.register"),
+                    "welcome.reg_account",
+                    ButtonStyle.Primary,
+                    new Emoji("👷"),
+                    row: 0)
+                .WithButton(
                     locale.Get("button.create_server"), 
                     "welcome.create_server", 
                     ButtonStyle.Primary, 
                     new Emoji("🆕"), 
-                    row: 0)
+                    row: 1)
                 .WithButton(
                     locale.Get("button.load_server"), 
                     "welcome.load_server", 
                     ButtonStyle.Primary, 
                     new Emoji("🗂️"), 
-                    row: 0);
+                    row: 1);
 
             IMessage embedMessage = await channel.SendMessageAsync(embed: eb.Build(), components: actionButtons.Build());
             data.Set<BotInfo>("info", x =>

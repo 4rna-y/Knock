@@ -200,10 +200,10 @@
       "send_file": {
         "title": "✈️  Sending Files...",
         "description": {
-          "0" : "**✅ Success**",
-          "1" : "**❓ Invalid file**",
-          "2" : "**❓ Invalid file**",
-          "3" : "**😿 Error**"
+          "0": "**✅ Success**",
+          "1": "**❓ Invalid file**",
+          "2": "**❓ Invalid file**",
+          "3": "**😿 Error**"
         }
       }
     },
@@ -218,6 +218,14 @@
       "server_locked": {
         "title": "🔒  This server is occupied by another user",
         "description": "If you are set as a co-owner, the channel has already been created"
+      }
+    },
+    "account_registration": {
+      "already": {
+        "title": "✅  You are already registred"
+      },
+      "done": {
+        "title": "✅  You are successfully registred"
       }
     }
   },
@@ -245,6 +253,8 @@
 
   "button": {
     "close_scenario": "Dismiss",
+
+    "register": "Registr Account",
 
     "create_server": "Create the new server",
 
