@@ -49,6 +49,9 @@ namespace Knock.Cluster.Services
             if (!tmpDir.Exists) tmpDir.Create();
         }
 
+        public int GetContainerCount() => process.GetContainerCount();
+        public int GetUsedMemory() => process.GetUsedMemory();
+
         public async Task<ErrorInfo> Create(Func<ContainerBuilder, ContainerBuilder> builderPredicate)
         {
             try 
@@ -71,6 +74,10 @@ namespace Knock.Cluster.Services
                 await CreateEulaFile(dir);
                 await json.CreateFile(launchInfo, dir, "launchinfo.json");
                 await WriteServerProperty(builder.Id, "level-name", "world");
+                await WriteServerProperty(builder.Id, "online-mode", "false");
+                await CreateOpsFile(dir);
+                await CreateWhitelistFile(dir);
+                await CreatePaperGlobalFile(dir);
                 
                 return new ErrorInfo();
             }
@@ -95,6 +102,37 @@ namespace Knock.Cluster.Services
             using (StreamWriter sw = File.CreateText(Path.Combine(dir.FullName, "eula.txt")))
             {
                 await sw.WriteLineAsync("eula=true");
+                await sw.FlushAsync();
+                sw.Close();
+            }
+        }
+
+        private async Task CreateOpsFile(DirectoryInfo dir)
+        {
+            using (StreamWriter sw = File.CreateText(Path.Combine(dir.FullName, "ops.json")))
+            {
+                await sw.WriteLineAsync(JsonSerializer.Serialize(new Ops()));
+                await sw.FlushAsync();
+                sw.Close();
+            }
+        }
+
+        private async Task CreateWhitelistFile(DirectoryInfo dir)
+        {
+            using (StreamWriter sw = File.CreateText(Path.Combine(dir.FullName, "whitelist.json")))
+            {
+                await sw.WriteLineAsync(JsonSerializer.Serialize(new WhitelistedUsers()));
+                await sw.FlushAsync();
+                sw.Close();
+            }
+        }
+
+        private async Task CreatePaperGlobalFile(DirectoryInfo dir)
+        {
+            DirectoryInfo config = dir.CreateSubdirectory("config");
+            using (StreamWriter sw = File.CreateText(Path.Combine(config.FullName, "paper-global.yml")))
+            {
+                await sw.WriteLineAsync("proxies:\r\n  bungee-cord:\r\n    online-mode: true\r\n  proxy-protocol: false\r\n  velocity:\r\n    enabled: true\r\n    online-mode: true\r\n    secret: 'MWI0Mzc5ZjZj'");
                 await sw.FlushAsync();
                 sw.Close();
             }

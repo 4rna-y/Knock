@@ -1,4 +1,6 @@
-﻿using Knock.Cluster.Models;
+﻿using ICSharpCode.SharpZipLib.GZip;
+using ICSharpCode.SharpZipLib.Tar;
+using Knock.Cluster.Models;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -67,7 +69,7 @@ namespace Knock.Cluster.Services
                     string reqPath = string.Format(jrePath, jreVersions[i], os, arch.ToString().ToLower());
                     string zipPath = await http.Download(reqPath, target, $"{jreVersions[i]}.zip");
                     logger.Info($"Extracting jre {jreVersions[i]}...");
-                    ZipFile.ExtractToDirectory(zipPath, target.FullName);
+                    ExtractTarGz(zipPath, target.FullName);
                     File.Delete(zipPath);
                 }
             }
@@ -133,6 +135,36 @@ namespace Knock.Cluster.Services
                     .GetDirectories().FirstOrDefault(x => x.Name == "bin")
                     .GetFiles().FirstOrDefault(x => x.Name.StartsWith($"java{ext}"));
             return bin.FullName;
+        }
+
+        public static void ExtractTarGz(string gzipFileName, string targetDir)
+        {
+            using (FileStream fs = new FileStream(gzipFileName, FileMode.Open, FileAccess.Read))
+            using (GZipInputStream gzipStream = new GZipInputStream(fs))
+            {
+                using (TarInputStream tarStream = new TarInputStream(gzipStream))
+                {
+                    TarEntry entry;
+                    while ((entry = tarStream.GetNextEntry()) != null)
+                    {
+                        string outPath = Path.Combine(targetDir, entry.Name);
+
+                        if (entry.IsDirectory)
+                        {
+                            Directory.CreateDirectory(outPath);
+                        }
+                        else
+                        {
+                            Directory.CreateDirectory(Path.GetDirectoryName(outPath));
+
+                            using (FileStream outStream = new FileStream(outPath, FileMode.Create))
+                            {
+                                tarStream.CopyEntryContents(outStream);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

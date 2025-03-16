@@ -60,6 +60,8 @@ namespace Knock
             handler.Log += OnHandlerLog;
             handler.InteractionExecuted += OnInteractionExecuted;
 
+            
+
             await handler.AddModulesAsync(Assembly.GetEntryAssembly(), services);
         }
 

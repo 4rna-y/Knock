@@ -22,8 +22,11 @@ namespace Knock.Cluster.Services
 
         private ConcurrentDictionary<Guid, Process> processes;
         private ConcurrentDictionary<Guid, ConcurrentBag<string>> logs;
+        private ConcurrentDictionary<int, bool> ports;
         private int containerCount;
         private int usedMemory;
+        private int initPort;
+        private int maxPort;
 
         public ProcessesManager(ILogger logger, IConfiguration config, JavaProcessProvider java) 
         {
@@ -32,12 +35,29 @@ namespace Knock.Cluster.Services
             this.java = java;
             processes = new ConcurrentDictionary<Guid, Process>();
             logs = new ConcurrentDictionary<Guid, ConcurrentBag<string>>();
+            ports = new ConcurrentDictionary<int, bool>();
+
+            initPort = int.Parse(config["container-port"]);
+            maxPort = int.Parse(config["max-container-count"]);
+
+            for (int i = 0; i < maxPort; i++)
+            {
+                ports.TryAdd(initPort + i, false);
+                
+            }
         }
+
+        public int GetContainerCount() => containerCount;
+        public int GetUsedMemory() => usedMemory;
 
         public async Task<IResult> Run(Guid id, LaunchInfo info, IContainerServerPropertiesConfigureAdapter adapter)
         {
+            int port = GetPort();
+            int initPort = int.Parse(config["container-port"]);
             try
             {
+                
+                if (port == -1) return new Error(1, "reached max container count");
                 if (containerCount > int.Parse(config["max-container-count"])) return new Error(1, "reached max container count");
                 if (processes.ContainsKey(id)) return new Error(2, "already locked");
                 if (usedMemory + info.MemoryAmount > int.Parse(config["memory-amount"]))
@@ -45,8 +65,8 @@ namespace Knock.Cluster.Services
 
                 Process process = java.GetJavaProcess(id, info);
                 usedMemory += info.MemoryAmount;
+                containerCount++;
 
-                int port = int.Parse(config["container-port"]) + containerCount++;
                 ErrorInfo portError = await adapter.WriteServerProperty(id, "server-port", port.ToString());
                 if (!portError.Success) return new Error(4, "port error");
 
@@ -62,10 +82,12 @@ namespace Knock.Cluster.Services
                 {
                     logger.Info("Container has exited");
                     logs.Remove(id, out _);
+                    containerCount--;
 
                     processes[id].Close();
                     processes[id].Dispose();
                     processes.Remove(id, out _);
+                    ports[port] = false;
                 };
 
                 process.Start();
@@ -79,7 +101,7 @@ namespace Knock.Cluster.Services
                 logger.Error(e); 
             }
 
-            return new Ok();
+            return new Ok(0, (port - initPort).ToString());
         }
 
         public async Task<IResult> Stop(Guid id)
@@ -107,6 +129,21 @@ namespace Knock.Cluster.Services
 
             log.Reverse();
             return Task.FromResult(string.Join("\n", log));
+        }
+
+        private int GetPort()
+        {
+            for (int i = 0; i < ports.Count; i++)
+            {
+                ports.TryGetValue(initPort + i, out bool v);
+                if (!v)
+                {
+                    ports[initPort + i] = true;
+                    return initPort + i;
+                }
+            }
+
+            return -1;
         }
     }
 }

@@ -70,7 +70,7 @@ namespace Knock.Services
                 await threadScenario.ChannelScenario.TextChannel.CreateThreadAsync(
                     threadScenario.Name,
                     ThreadType.PrivateThread,
-                    ThreadArchiveDuration.OneHour);
+                    ThreadArchiveDuration.OneWeek);
 
             await thread.AddUserAsync(threadScenario.Guild.Users.FirstOrDefault(x => x.Id.Equals(threadScenario.User.Id)));
             threadScenario.ChannelScenario.Threads.Add(threadScenario.Key, threadScenario);

@@ -36,6 +36,8 @@ namespace Knock.Services
                 return x;
             });
 
+            data.Save("containers");
+
             RemoveBuilder(id);
             return container;
         }

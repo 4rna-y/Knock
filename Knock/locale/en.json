@@ -182,6 +182,10 @@
         "failed": {
           "title": "🚭  Failed to launch your container.",
           "description": "returned code : {0}\nmessage : {1}"
+        },
+        "dm": {
+          "title": "💌  You are invited by {0} on {1}.",
+          "description": "Connect to **{0}** from the hub server and play."
         }
       },
       "stop": {
@@ -254,7 +258,7 @@
   "button": {
     "close_scenario": "Dismiss",
 
-    "register": "Registr Account",
+    "register": "Register Account",
 
     "create_server": "Create the new server",
 

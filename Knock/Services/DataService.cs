@@ -44,8 +44,7 @@ namespace Knock.Services
         {
             foreach (string key in models.Keys)
             {
-                FileInfo file = new FileInfo(Path.Combine(dataPath, key + ".json"));
-                Save(key, file);
+                Save(key);
             }
         }
 
@@ -84,11 +83,13 @@ namespace Knock.Services
                 tw.Write(JsonSerializer.Serialize(model, type));
                 tw.Flush();
                 tw.Close();
+                models.TryAdd(Path.GetFileNameWithoutExtension(file.Name), model as JsonModelBase);
             }
         }
 
-        private void Save(string name, FileInfo file)
+        public void Save(string name)
         {
+            FileInfo file = new FileInfo(Path.Combine(dataPath, name + ".json"));
             IEnumerable<Type> types = GetJsonModelTypes();
             if (file.Exists) file.Delete();
 

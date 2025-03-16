@@ -33,7 +33,7 @@ namespace Knock.Cluster.Networks
             this.data = data;
             this.response = response;
 
-            client = new WebSocket("ws://localhost:54321");
+            client = new WebSocket(config["server-address"]);
             client.LocalEndPoint = IPEndPoint.Parse(config["local-address"]);
             client.NoDelay = true;
             client.Opened += OnOpened;

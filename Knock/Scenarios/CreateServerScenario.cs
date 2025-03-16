@@ -189,6 +189,8 @@ namespace Knock.Scenarios
                 return x;
             });
 
+            Data.Save("mcinfo");
+
             await RemoveMessage("register-account-found");
             await arg.DeferAsync();
 

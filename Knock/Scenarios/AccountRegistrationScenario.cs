@@ -172,11 +172,13 @@ namespace Knock.Scenarios
                 return x;
             });
 
+            Data.Save("mcinfo");
+
             await RemoveMessage("register-account-found");
             await arg.DeferAsync();
 
             EmbedBuilder embed = new EmbedBuilder()
-                    .WithTitle(Locale.Get("embed.account_registration.already.title"))
+                    .WithTitle(Locale.Get("embed.account_registration.done.title"))
                     .WithColor(Color["success"]);
 
             ScheduleBase schedule = new UnregisterScenarioSchedule(ScenarioId, 10);

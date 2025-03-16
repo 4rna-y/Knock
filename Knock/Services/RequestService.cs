@@ -33,9 +33,23 @@ namespace Knock.Services
         }
 
         public List<IWebSocketConnection> GetConnections() => webSocket.GetConnections();
-
-        public async Task<ServerStatus> GetStatus(IWebSocketConnection connection)
+        public int GetServerIndexOf(Guid containerId)
         {
+            ServerContainer container =
+                data.Get<ServerContainers>("containers").Containers.FirstOrDefault(x => x.Id.Equals(containerId));
+            return this.GetConnections().FindIndex(
+                    x => container.StoredLocation.Equals(
+                        $"{x.ConnectionInfo.ClientIpAddress}:{x.ConnectionInfo.ClientPort}"));
+        }
+
+        public async Task<ServerStatus> GetStatus(Guid containerId)
+        {
+            ServerContainer container =
+                data.Get<ServerContainers>("containers").Containers.FirstOrDefault(x => x.Id.Equals(containerId));
+            IWebSocketConnection connection =
+                this.GetConnections().FirstOrDefault(
+                    x => container.StoredLocation.Equals($"{x.ConnectionInfo.ClientIpAddress}:{x.ConnectionInfo.ClientPort}"));
+
             Guid id = Guid.NewGuid();
             DataPacket packet = new DataPacket.Builder()
                 .WithPacketType(PacketTypes.Request)

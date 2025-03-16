@@ -17,7 +17,7 @@ namespace Knock.Models
 
         public BotInfo() : base("info")
         {
-                
+         
         }
     }
 }

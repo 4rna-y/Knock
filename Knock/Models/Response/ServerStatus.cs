@@ -11,17 +11,17 @@ namespace Knock.Models.Response
     /// </summary>
     public class ServerStatus
     {
-        public byte ContainerCount { get; set; }
-        public byte MaxContainerCount { get; set; }
-        public byte UsingMemoryAmount { get; set; }
-        public byte MaxMemoryAmount { get; set; }
+        public int ContainerCount { get; set; }
+        public int MaxContainerCount { get; set; }
+        public int UsingMemoryAmount { get; set; }
+        public int MaxMemoryAmount { get; set; }
 
         public ServerStatus(byte[] data)
         {
-            ContainerCount = data[0];
-            MaxContainerCount = data[1];
-            UsingMemoryAmount = data[2];
-            MaxMemoryAmount = data[3];
+            ContainerCount = BitConverter.ToInt32(data, sizeof(int) * 0);
+            MaxContainerCount = BitConverter.ToInt32(data, sizeof(int) * 1);
+            UsingMemoryAmount = BitConverter.ToInt32(data, sizeof(int) * 2);
+            MaxMemoryAmount = BitConverter.ToInt32(data, sizeof(int) * 3);
         }
     }
 }

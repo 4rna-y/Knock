@@ -2,6 +2,7 @@
 using Knock.Shared;
 using Knock.Transport;
 using Knock.Transport.Enum;
+using Microsoft.Extensions.Configuration;
 using NLog;
 using System;
 using System.Collections.Generic;
@@ -13,12 +14,15 @@ namespace Knock.Cluster.Services
 {
     public class ResponseHandler
     {
+        private readonly IConfiguration config;
         private readonly ILogger logger;
         private readonly ContainerService container;
         public ResponseHandler(
+            IConfiguration config,
             ILogger logger,
             ContainerService container) 
         {
+            this.config = config;
             this.logger = logger;
             this.container = container;
         }
@@ -42,18 +46,18 @@ namespace Knock.Cluster.Services
         {
             logger.Info("Response status");
 
-            byte[] data = new byte[4];
-            data[0] = 0; // Running Container Count
-            data[1] = 8; // Container Capacity
-            data[2] = 0; // Allocated Memory Amount
-            data[3] = 16; // Max Allocatable Memory Amount
+            List<byte> data = new List<byte>();
+            data.AddRange(BitConverter.GetBytes(container.GetContainerCount())); // Running Container Count
+            data.AddRange(BitConverter.GetBytes(int.Parse(config["max-container-count"]))); // Container Capacity
+            data.AddRange(BitConverter.GetBytes(container.GetUsedMemory())); // Allocated Memory Amount
+            data.AddRange(BitConverter.GetBytes(int.Parse(config["memory-amount"]))); // Max Allocatable Memory Amount
 
             DataPacket dest = new DataPacket.Builder()
                 .WithPacketType(PacketTypes.Response)
                 .WithDataType(DataTypes.Plain)
                 .WithRequestType(RequestTypes.Status)
                 .WithGuid(packet.Guid)
-                .WithData(data)
+                .WithData(data.ToArray())
                 .Build();
 
             return Task.FromResult(dest);

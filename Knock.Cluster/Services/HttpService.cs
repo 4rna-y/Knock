@@ -19,10 +19,13 @@ namespace Knock.Cluster.Services
 
         public async Task<string> Download(string url, DirectoryInfo dir, string name)
         {
-            using HttpResponseMessage res = await http.GetAsync(url);
-            using FileStream file = new FileStream(Path.Combine(dir.FullName, name), FileMode.Create);
+            using HttpResponseMessage res = await http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead);
+            using FileStream file = new FileStream(
+                Path.Combine(dir.FullName, name), FileMode.Create, FileAccess.Write, FileShare.None, bufferSize: 8192, useAsync: true);
             res.EnsureSuccessStatusCode();
             await res.Content.CopyToAsync(file);
+            await file.FlushAsync();
+            file.Close();
             return Path.Combine(dir.FullName, name);
         }
 

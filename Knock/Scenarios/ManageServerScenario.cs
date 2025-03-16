@@ -2,6 +2,7 @@
 using Discord.Rest;
 using Discord.WebSocket;
 using Knock.Models;
+using Knock.Models.Response;
 using Knock.Services;
 using Knock.Shared;
 using Microsoft.Extensions.DependencyInjection;
@@ -175,10 +176,12 @@ namespace Knock.Scenarios
                 return;
             }
 
+            await component.DeferAsync();
+
             EditServerPropertiesThreadScenario scenario = await Scenario.Register(
                 new EditServerPropertiesThreadScenario(this, Locale.Get("threads.edit_server_properties"), serverId));
 
-            await component.DeferAsync();
+            
         }
 
         private async Task ActionManageOwner(SocketMessageComponent componentArg)
@@ -193,10 +196,12 @@ namespace Knock.Scenarios
                 return;
             }
 
+            await componentArg.DeferAsync();
+
             ManageOwnerThreadScenario scenario = await Scenario.Register(
                 new ManageOwnerThreadScenario(this, Locale.Get("threads.manage_owner"), serverId));
 
-            await componentArg.DeferAsync();
+            
         }
 
         private async Task ActionManageWhitelist(SocketMessageComponent componentArg)
@@ -211,10 +216,10 @@ namespace Knock.Scenarios
                 return;
             }
 
+            await componentArg.DeferAsync();
+
             ManageWhitelistThreadScenario scenario = await Scenario.Register(
                 new ManageWhitelistThreadScenario(this, Locale.Get("threads.manage_whitelist"), serverId));
-
-            await componentArg.DeferAsync();
         }
 
         private async Task Launch(SocketInteraction arg)
@@ -222,7 +227,8 @@ namespace Knock.Scenarios
             await arg.DeferAsync();
             await ToggleMessage("manage", true);
             IResult res = await Request.Launch(serverId);
-
+            ServerStatus status = await Request.GetStatus(serverId);
+            List<Guid> uuids = await Request.GetWhitelistedIds(serverId);
             _isLaunched = res.IsSuccess;
 
             List<Embed> embeds = new List<Embed>();
@@ -236,6 +242,27 @@ namespace Knock.Scenarios
 
                 await Scenario.Register(
                     new ServerContainerLogOutputThreadScenario(this, Locale.Get("threads.log_output"), serverId));
+
+                int serverNum = Request.GetServerIndexOf(serverId);
+                string velocityName = $"{serverNum * status.MaxContainerCount + int.Parse(res.Message)}";
+
+                MinecraftAccounts accs = Data.Get<MinecraftAccounts>("mcinfo");
+                List<MinecraftAccount> mAccs = accs.Accounts.FindAll(x => uuids.Contains(Guid.Parse(x.MinecraftId)));
+
+                foreach (MinecraftAccount mAcc in mAccs)
+                {
+                    SocketUser user = Guild.GetUser(mAcc.DiscordId);
+                    EmbedBuilder embed = new EmbedBuilder()
+                        .WithTitle(string.Format(
+                            Locale.Get("embed.manage_server.launch.dm.title"),
+                            $"{User.Username}", $"{Guild.Name}"))
+                        .WithDescription(string.Format(
+                            Locale.Get("embed.manage_server.launch.dm.description"),
+                            velocityName))
+                        .WithColor(Color["success"]);
+
+                    await user.SendMessageAsync(embed: embed.Build());
+                }
             }
             else
             {
