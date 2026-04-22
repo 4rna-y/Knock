@@ -1,4 +1,5 @@
 # Knock
+![0-AI-Coding](https://img.shields.io/badge/0--AI--Coding-Human%20Only-blue)
 
 Discordからマインクラフトサーバーを統合管理するための、分散型サーバー管理システムです。
 
